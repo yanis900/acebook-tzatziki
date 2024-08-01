@@ -2,15 +2,17 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { getPosts } from "../../services/posts";
-import Post from "../../components/Post/Post";
+import Post from "../../components/Post";
+import LogoutButton from "../../components/LogoutButton";
 
-export const FeedPage = () => {
+export function FeedPage() {
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
+    const loggedIn = token !== null;
+    if (loggedIn) {
       getPosts(token)
         .then((data) => {
           setPosts(data.posts);
@@ -37,6 +39,7 @@ export const FeedPage = () => {
           <Post post={post} key={post._id} />
         ))}
       </div>
+      <LogoutButton />
     </>
   );
-};
+}

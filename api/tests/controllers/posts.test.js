@@ -9,7 +9,7 @@ require("../mongodb_helper");
 
 const secret = process.env.JWT_SECRET;
 
-const createToken = (userId) => {
+function createToken(userId) {
   return JWT.sign(
     {
       user_id: userId,
@@ -20,7 +20,7 @@ const createToken = (userId) => {
     },
     secret
   );
-};
+}
 
 let token;
 describe("/posts", () => {

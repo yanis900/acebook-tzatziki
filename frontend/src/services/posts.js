@@ -1,7 +1,7 @@
 // docs: https://vitejs.dev/guide/env-and-mode.html
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-export const getPosts = async (token) => {
+export async function getPosts(token) {
   const requestOptions = {
     method: "GET",
     headers: {
@@ -17,4 +17,4 @@ export const getPosts = async (token) => {
 
   const data = await response.json();
   return data;
-};
+}

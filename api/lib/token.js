@@ -6,7 +6,7 @@ const secret = process.env.JWT_SECRET;
  * token for a specific user.
  * JWTs in 100 Seconds: https://www.youtube.com/watch?v=UBUNrFtufWo
  */
-const generateToken = (user_id) => {
+function generateToken(user_id) {
   return JWT.sign(
     {
       user_id: user_id,
@@ -17,10 +17,10 @@ const generateToken = (user_id) => {
     },
     secret
   );
-};
+}
 
-const decodeToken = (token) => {
+function decodeToken(token) {
   return JWT.decode(token, secret);
-};
+}
 
 module.exports = { generateToken, decodeToken };

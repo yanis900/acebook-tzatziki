@@ -96,11 +96,11 @@ import MyClass from "./path/to/other/file.js";
 To export multiple values, we can use the `export` keyword more than once:
 
 ```js
-export const add = (a, b) => {
+export function add (a, b){
   return a + b;
 };
 
-export const multiply = (a, b) => {
+export function multiply (a, b){
   return a * b;
 };
 ```

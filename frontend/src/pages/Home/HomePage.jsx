@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 import "./HomePage.css";
 
-export const HomePage = () => {
+export function HomePage() {
   return (
     <div className="home">
       <h1>Welcome to Acebook!</h1>
@@ -10,4 +10,4 @@ export const HomePage = () => {
       <Link to="/login">Log In</Link>
     </div>
   );
-};
+}
