@@ -1,7 +1,7 @@
 const User = require("../models/user");
 const { generateToken } = require("../lib/token");
 
-const createToken = async (req, res) => {
+async function createToken(req, res) {
   const email = req.body.email;
   const password = req.body.password;
 
@@ -16,7 +16,7 @@ const createToken = async (req, res) => {
     const token = generateToken(user.id);
     res.status(201).json({ token: token, message: "OK" });
   }
-};
+}
 
 const AuthenticationController = {
   createToken: createToken,

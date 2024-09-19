@@ -1,7 +1,7 @@
 const JWT = require("jsonwebtoken");
 
 // Middleware function to check for valid tokens
-const tokenChecker = (req, res, next) => {
+function tokenChecker(req, res, next) {
   let token;
   const authHeader = req.get("Authorization");
 
@@ -19,6 +19,6 @@ const tokenChecker = (req, res, next) => {
       next();
     }
   });
-};
+}
 
 module.exports = tokenChecker;

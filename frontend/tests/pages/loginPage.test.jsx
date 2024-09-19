@@ -21,7 +21,7 @@ vi.mock("../../src/services/authentication", () => {
 });
 
 // Reusable function for filling out login form
-const completeLoginForm = async () => {
+async function completeLoginForm() {
   const user = userEvent.setup();
 
   const emailInputEl = screen.getByLabelText("Email:");
@@ -31,7 +31,7 @@ const completeLoginForm = async () => {
   await user.type(emailInputEl, "test@email.com");
   await user.type(passwordInputEl, "1234");
   await user.click(submitButtonEl);
-};
+}
 
 describe("Login Page", () => {
   beforeEach(() => {
