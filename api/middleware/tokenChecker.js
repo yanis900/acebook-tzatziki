@@ -9,16 +9,21 @@ function tokenChecker(req, res, next) {
     token = authHeader.slice(7);
   }
 
-  JWT.verify(token, process.env.JWT_SECRET, (err, payload) => {
-    if (err) {
-      console.log(err);
-      res.status(401).json({ message: "auth error" });
-    } else {
-      // Add the user_id from the payload to the req object.
-      req.user_id = payload.user_id;
-      next();
+  try {
+    const payload = JWT.verify(token, process.env.JWT_SECRET);
+    const user_id = payload.sub;
+
+    if (!user_id) {
+      throw new Error("No sub claim in JWT token");
     }
-  });
+
+    // Add the user_id from the payload to the Express req object.
+    req.user_id = user_id;
+    next();
+  } catch (err) {
+    console.log(err);
+    res.status(401).json({ message: "auth error" });
+  }
 }
 
 module.exports = tokenChecker;

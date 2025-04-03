@@ -12,7 +12,7 @@ const secret = process.env.JWT_SECRET;
 function createToken(userId) {
   return JWT.sign(
     {
-      user_id: userId,
+      sub: userId,
       // Backdate this token of 5 minutes
       iat: Math.floor(Date.now() / 1000) - 5 * 60,
       // Set the JWT token to expire in 10 minutes
