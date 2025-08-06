@@ -35,7 +35,7 @@ If you haven't already, make sure you have node and NVM installed.
    ```
    brew install nvm
    ```
-   Then follow the instructions to update your `~/.bash_profile`.
+   Then follow the instructions to update your `~/.zshrc`.
 2. Open a new terminal
 3. Install the latest version of [Node.js](https://nodejs.org/en/), (`20.5.0` at
    time of writing).
