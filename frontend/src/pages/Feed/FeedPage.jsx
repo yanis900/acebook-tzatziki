@@ -7,16 +7,14 @@ import LogoutButton from "../../components/LogoutButton";
 
 export function FeedPage() {
   const [posts, setPosts] = useState([]);
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
-
-  console.log('rendered')
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     const loggedIn = token !== null;
     if (loggedIn) {
-     getPosts(token) 
+      getPosts(token)
         .then((data) => {
           setPosts(data.posts);
           localStorage.setItem("token", data.token);
@@ -28,33 +26,38 @@ export function FeedPage() {
     }
   }, [navigate]);
 
-    const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
   if (!token) {
     navigate("/login");
     return;
   }
 
-    const handleSubmit = async () => {
-      try {
-        await createPost(token, message)
-        const data = await getPosts(token)
-        setPosts(data.posts);
-        localStorage.setItem("token", data.token);
-      } catch (error) {
-        console.log(error)
-      }
+  const handleSubmit = async () => {
+    try {
+      await createPost(token, message);
+      const data = await getPosts(token);
+      setPosts(data.posts);
+      localStorage.setItem("token", data.token);
+    } catch (error) {
+      console.log(error);
     }
+  };
 
   return (
     <>
       <h2>Feed Page</h2>
       <div className="feed" role="feed">
         <label>
-            <input name="Post" type='text' onChange={(e) => setMessage(e.target.value)} placeholder="What's on your mind??" />
+          <input
+            name="Post"
+            type="text"
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="What's on your mind??"
+          />
         </label>
-        <label>
-            <button name='submit' onClick={handleSubmit}>Submit</button>
-        </label>
+        <button name="submit" onClick={handleSubmit}>
+          Submit
+        </button>
         {posts.map((post) => (
           <Post post={post} key={post._id} />
         ))}
@@ -63,7 +66,6 @@ export function FeedPage() {
     </>
   );
 }
-
 
 // export default function Form() {
 //   const [age, setAge] = useState('20');
