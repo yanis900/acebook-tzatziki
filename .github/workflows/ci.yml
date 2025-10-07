@@ -42,8 +42,10 @@ jobs:
           echo 'JWT_SECRET="secret"' >> api/.env
           
           # Run tests
+          # Backend using Jest
           cd api && npm test -- --watchAll=false
-          cd ../frontend && npm test -- --watchAll=false
+          # Frontend tests with Vitest, so can't use --watchAll flag
+          cd ../frontend && npm test -- --run
 
       # Lint your code
       # Uncomment the following lines if you use ESLint
