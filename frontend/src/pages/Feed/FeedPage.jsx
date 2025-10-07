@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { getPosts } from "../../services/posts";
+import { getPosts, createPost } from "../../services/posts";
 import Post from "../../components/Post";
 import LogoutButton from "../../components/LogoutButton";
 
@@ -9,6 +9,8 @@ export function FeedPage() {
   const [posts, setPosts] = useState([]);
   const [message, setMessage] = useState('')
   const navigate = useNavigate();
+
+
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -32,28 +34,15 @@ export function FeedPage() {
     return;
   }
 
-const handleSubmit = async () => {
-  const url = 'http://localhost:3000/posts'
-  try {
-    console.log(token)
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({message: message})
-    })
-
-    const data = await response.json()
-    console.log(message)
-    console.log(data)
-
-    return data
-  } catch (error) {
-    console.log(error)
-  }
-
+    const handleSubmit = async () => {
+      try {
+        await createPost(token, message)
+        const data = await getPosts(token)
+        setPosts(data.posts);
+        localStorage.setItem("token", data.token);
+      } catch (error) {
+        console.log(error)
+      }
 }
 
   return (
@@ -64,7 +53,7 @@ const handleSubmit = async () => {
             <input name="Post" onChange={(e) => setMessage(e.target.value)} placeholder="What's on your mind??" />
         </label>
         <label>
-            <button onClick={handleSubmit}>:-8</button>
+            <button onClick={handleSubmit}>Submit</button>
         </label>
         {posts.map((post) => (
           <Post post={post} key={post._id} />
