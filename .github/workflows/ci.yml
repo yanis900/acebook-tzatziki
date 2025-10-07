@@ -1,8 +1,12 @@
 name: AceBook CI
 
 on:
+  push:
+    branches:
+      - feature/** 
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   build:
