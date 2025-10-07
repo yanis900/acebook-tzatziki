@@ -1,0 +1,37 @@
+name: AceBook CI
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # Build the AceBook app
+      - name: Build AceBook app
+        run: npm run build
+
+      # Run tests
+      - name: Run tests
+        run: npm test -- --watchAll=false
+
+      # Lint your code
+      # Uncomment the following lines if you use ESLint
+      - name: Lint code
+        run: npm run lint
