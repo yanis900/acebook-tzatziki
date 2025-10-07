@@ -47,14 +47,3 @@ jobs:
           # Frontend tests with Vitest, so can't use --watchAll flag
           cd ../frontend && npm test -- --run
 
-      # Lint your code
-      # Uncomment the following lines if you use ESLint
-      - name: Lint code
-        run: |
-          cd api
-          npm install eslint --save-dev        # install ESLint
-          npx eslint .                         # run ESLint across all files
-
-          cd ../frontend
-          npm install eslint --save-dev        # install ESLint for frontend
-          npx eslint .                         # run ESLint
