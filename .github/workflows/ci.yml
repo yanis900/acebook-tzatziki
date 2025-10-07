@@ -25,13 +25,13 @@ jobs:
 
       # Build the AceBook app
       - name: Build AceBook app
-        run: npm run build
+        run: cd api && npm run build && cd ../frontend && npm run build
 
       # Run tests
       - name: Run tests
-        run: npm test -- --watchAll=false
+        run: cd api && npm test -- --watchAll=false && cd ../frontend && npm test -- --watchAll=false
 
       # Lint your code
       # Uncomment the following lines if you use ESLint
       - name: Lint code
-        run: npm run lint
+        run: cd api && npm run lint && cd ../frontend && npm run lint
