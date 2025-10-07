@@ -5,6 +5,8 @@ import { FeedPage } from "../../src/pages/Feed/FeedPage";
 import { getPosts } from "../../src/services/posts";
 import { useNavigate } from "react-router-dom";
 
+import userEvent from "@testing-library/user-event";
+
 // Mocking the getPosts service
 vi.mock("../../src/services/posts", () => {
   const getPostsMock = vi.fn();
@@ -41,4 +43,21 @@ describe("Feed Page", () => {
     const navigateMock = useNavigate();
     expect(navigateMock).toHaveBeenCalledWith("/login");
   });
+
+  test("createPost creates post and appears on feed", async () => {
+  window.localStorage.setItem("token", "testToken");
+
+  render(<FeedPage />);
+  screen.debug();
+
+  const input = screen.getByPlaceholderText("What's on your mind??");
+  await userEvent.type(input, "Hello World");
+
+  const submit = screen.getByRole("button", { name: /submit/i });
+  await userEvent.click(submit);
+
+  const post = await screen.findByText("Hello World");
+  expect(post).toBeInTheDocument();
+
+})
 });

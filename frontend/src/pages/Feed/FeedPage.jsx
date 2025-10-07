@@ -10,7 +10,7 @@ export function FeedPage() {
   const [message, setMessage] = useState('')
   const navigate = useNavigate();
 
-
+  console.log('rendered')
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -43,17 +43,17 @@ export function FeedPage() {
       } catch (error) {
         console.log(error)
       }
-}
+    }
 
   return (
     <>
       <h2>Feed Page</h2>
       <div className="feed" role="feed">
         <label>
-            <input name="Post" onChange={(e) => setMessage(e.target.value)} placeholder="What's on your mind??" />
+            <input name="Post" type='text' onChange={(e) => setMessage(e.target.value)} placeholder="What's on your mind??" />
         </label>
         <label>
-            <button onClick={handleSubmit}>Submit</button>
+            <button name='submit' onClick={handleSubmit}>Submit</button>
         </label>
         {posts.map((post) => (
           <Post post={post} key={post._id} />
