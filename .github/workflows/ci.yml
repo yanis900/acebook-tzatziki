@@ -30,13 +30,10 @@ jobs:
       # Run tests
       - name: Run tests
         run: |
-          # Install MongoDB
-          sudo apt-get update
-          sudo apt-get install -y mongodb
-          
-          # Start MongoDB
-          sudo systemctl start mongodb
-          sudo systemctl status mongodb
+          # Start MongoDB container
+          docker run -d -p 27017:27017 --name mongodb mongo:6.0
+          echo "Waiting for MongoDB to start..."
+          sleep 10          # give MongoDB a few seconds to initialize
           
           # Set up environment variables
           echo 'VITE_BACKEND_URL="http://localhost:3000"' > frontend/.env
