@@ -29,7 +29,24 @@ jobs:
 
       # Run tests
       - name: Run tests
-        run: cd api && npm test -- --watchAll=false && cd ../frontend && npm test -- --watchAll=false
+        run: |
+          # Install MongoDB
+          sudo apt-get update
+          sudo apt-get install -y mongodb
+          
+          # Start MongoDB
+          sudo systemctl start mongodb
+          sudo systemctl status mongodb
+          
+          # Set up environment variables
+          echo 'VITE_BACKEND_URL="http://localhost:3000"' > frontend/.env
+          echo 'MONGODB_URL="mongodb://0.0.0.0/acebook"' > api/.env
+          echo 'NODE_ENV="development"' >> api/.env
+          echo 'JWT_SECRET="secret"' >> api/.env
+          
+          # Run tests
+          cd api && npm test -- --watchAll=false
+          cd ../frontend && npm test -- --watchAll=false
 
       # Lint your code
       # Uncomment the following lines if you use ESLint
