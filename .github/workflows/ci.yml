@@ -21,10 +21,7 @@ jobs:
 
       # Install dependencies
       - name: Install dependencies
-        run: cd api
-            npm i
-            cd ../frontend
-            npm i
+        run: cd api && npm i && cd ../frontend &&
 
       # Build the AceBook app
       - name: Build AceBook app
