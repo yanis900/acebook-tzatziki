@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { getPosts } from "../../services/posts";
+import { getPosts, createPost } from "../../services/posts";
 import Post from "../../components/Post";
 import LogoutButton from "../../components/LogoutButton";
 
 export function FeedPage() {
   const [posts, setPosts] = useState([]);
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,10 +32,36 @@ export function FeedPage() {
     return;
   }
 
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      await createPost(token, message);
+      const data = await getPosts(token);
+      setPosts(data.posts);
+      localStorage.setItem("token", data.token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
-      <h2>Posts</h2>
+      <h2>Feed Page</h2>
       <div className="feed" role="feed">
+        <form onSubmit={handleSubmit}>
+          <label>
+            <input
+              name="Post"
+              type="text"
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="What's on your mind??"
+              required
+            />
+          </label>
+          <button type="submit" disabled={!message.trim()}>
+            Submit
+          </button>
+        </form>
         {posts.map((post) => (
           <Post post={post} key={post._id} />
         ))}
@@ -43,3 +70,23 @@ export function FeedPage() {
     </>
   );
 }
+
+// export default function Form() {
+//   const [age, setAge] = useState('20');
+//   const ageAsNumber = Number(age);
+//   return (
+//     <>
+//       <label>
+//         <input name="Post" defaultValue="What's on your mind??" />
+//         <button onClick={() => setAge(ageAsNumber + 10)}>
+//           Add 10 years
+//         </button>
+//       </label>
+//       {posts.map((post) => (
+//           <Post post={post} key={post._id} />
+//         ))}
+//       </div>
+//       <LogoutButton />
+//     </>
+//   );
+// }
