@@ -13,12 +13,32 @@ export function SignupPage() {
 
   const notify = (err) => toast.error(`${err}`);
 
+  const validatePassword = (password) => {
+    if (password < 8) {
+      throw new Error('Password Must Be Minimum 8 Characters')
+    }
+    if (password > 16) {
+      throw new Error('Password Must Be Maximum 16 Characters')
+    }
+    if (!/[A-Z]/.test(password)) {
+      throw new Error('Password Must Contain At Least 1 Capital Letter')
+    }
+    if (!/[0-9]/.test(password)) {
+      throw new Error('Password Must Contain At Least 1 Number')
+    }
+    if (!/[^a-zA-Z0-9]/.test(password)) {
+      throw new Error('Password Must Contain At Least 1 Special Character')
+    }
+
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
     try {
       if (password !== confirmPassword) {
         throw new Error("Passwords Do Not Match");
       }
+      validatePassword(password)
       await signup(firstname, lastname, email, password);
       navigate("/login");
     } catch (err) {
@@ -51,7 +71,6 @@ export function SignupPage() {
     <>
       <h2>Signup</h2>
       <ToastContainer closeOnClick />
-      {/* <button onClick={notify}>🍞</button> */}
       <form onSubmit={handleSubmit}>
         <label htmlFor="firstname">Firstname:</label>
         <input
@@ -84,6 +103,8 @@ export function SignupPage() {
           type="password"
           value={password}
           onChange={handlePasswordChange}
+          minLength={8}
+          maxLength={16}
           required
         />
         <label htmlFor="confirm">Confirm Password:</label>
