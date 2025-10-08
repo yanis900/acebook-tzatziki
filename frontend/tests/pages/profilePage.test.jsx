@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 
-import { ProfilePage } from "./pages/Profile/ProfilePage";
+import { ProfilePage } from "../../src/pages/Profile/ProfilePage";
 import { getPosts, createPost } from "../../src/services/posts";
 import { useNavigate } from "react-router-dom";
 
