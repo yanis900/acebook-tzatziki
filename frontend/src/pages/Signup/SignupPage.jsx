@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { signup } from "../../services/authentication";
+import { getUser } from "../../services/users";
 
 export function SignupPage() {
   const [firstname, setFirstname] = useState("");
@@ -15,22 +16,21 @@ export function SignupPage() {
 
   const validatePassword = (password) => {
     if (password < 8) {
-      throw new Error('Password Must Be Minimum 8 Characters')
+      throw new Error("Password Must Be Minimum 8 Characters");
     }
     if (password > 16) {
-      throw new Error('Password Must Be Maximum 16 Characters')
+      throw new Error("Password Must Be Maximum 16 Characters");
     }
     if (!/[A-Z]/.test(password)) {
-      throw new Error('Password Must Contain At Least 1 Capital Letter')
+      throw new Error("Password Must Contain At Least 1 Capital Letter");
     }
     if (!/[0-9]/.test(password)) {
-      throw new Error('Password Must Contain At Least 1 Number')
+      throw new Error("Password Must Contain At Least 1 Number");
     }
     if (!/[^a-zA-Z0-9]/.test(password)) {
-      throw new Error('Password Must Contain At Least 1 Special Character')
+      throw new Error("Password Must Contain At Least 1 Special Character");
     }
-
-  }
+  };
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -38,7 +38,12 @@ export function SignupPage() {
       if (password !== confirmPassword) {
         throw new Error("Passwords Do Not Match");
       }
-      validatePassword(password)
+      const exists = await getUser(email);
+      if (exists) {
+        throw new Error("Email Already In Use");
+      }
+
+      validatePassword(password);
       await signup(firstname, lastname, email, password);
       navigate("/login");
     } catch (err) {
