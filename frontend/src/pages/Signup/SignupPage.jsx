@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { ToastContainer, toast } from "react-toastify";
 import { signup } from "../../services/authentication";
 
 export function SignupPage() {
@@ -8,14 +8,21 @@ export function SignupPage() {
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
+
+  const notify = (err) => toast.error(`${err}`);
 
   async function handleSubmit(event) {
     event.preventDefault();
     try {
+      if (password !== confirmPassword) {
+        throw new Error("Passwords Do Not Match");
+      }
       await signup(firstname, lastname, email, password);
       navigate("/login");
     } catch (err) {
+      notify(err);
       console.error(err);
       navigate("/signup");
     }
@@ -36,9 +43,15 @@ export function SignupPage() {
     setPassword(event.target.value);
   }
 
+  function handleConfirmPasswordChange(event) {
+    setConfirmPassword(event.target.value);
+  }
+
   return (
     <>
       <h2>Signup</h2>
+      <ToastContainer closeOnClick />
+      {/* <button onClick={notify}>🍞</button> */}
       <form onSubmit={handleSubmit}>
         <label htmlFor="firstname">Firstname:</label>
         <input
@@ -46,6 +59,7 @@ export function SignupPage() {
           type="text"
           value={firstname}
           onChange={handleFirstNameChange}
+          required
         />
         <label htmlFor="lastname">Lastname:</label>
         <input
@@ -53,13 +67,15 @@ export function SignupPage() {
           type="text"
           value={lastname}
           onChange={handleLastNameChange}
+          required
         />
         <label htmlFor="email">Email:</label>
         <input
           id="email"
-          type="text"
+          type="email"
           value={email}
           onChange={handleEmailChange}
+          required
         />
         <label htmlFor="password">Password:</label>
         <input
@@ -68,6 +84,16 @@ export function SignupPage() {
           type="password"
           value={password}
           onChange={handlePasswordChange}
+          required
+        />
+        <label htmlFor="confirm">Confirm Password:</label>
+        <input
+          placeholder="Confirm Password"
+          id="confirm"
+          type="password"
+          value={confirmPassword}
+          onChange={handleConfirmPasswordChange}
+          required
         />
         <input role="submit-button" id="submit" type="submit" value="Submit" />
       </form>
