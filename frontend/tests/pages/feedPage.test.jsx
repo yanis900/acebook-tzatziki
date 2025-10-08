@@ -48,12 +48,10 @@ describe("Feed Page", () => {
   test("createPost creates post and appears on feed", async () => {
   window.localStorage.setItem("token", "testToken");
 
-  // First getPosts call (in useEffect) returns no posts
   getPosts.mockResolvedValueOnce({ posts: [], token: "newToken" });
-  // After creating a post, getPosts should return the new post
+
   getPosts.mockResolvedValueOnce({ posts: [{ _id: "1", message: "Hello World" }], token: "newToken" });
 
-  // Mock createPost to resolve successfully
   createPost.mockResolvedValueOnce({ _id: "1", message: "Hello World" });
 
   render(<FeedPage />);

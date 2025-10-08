@@ -32,8 +32,9 @@ export function FeedPage() {
     return;
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
     try {
+      e.preventDefault();
       await createPost(token, message);
       const data = await getPosts(token);
       setPosts(data.posts);
@@ -47,17 +48,20 @@ export function FeedPage() {
     <>
       <h2>Feed Page</h2>
       <div className="feed" role="feed">
-        <label>
-          <input
-            name="Post"
-            type="text"
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="What's on your mind??"
-          />
-        </label>
-        <button name="submit" onClick={handleSubmit}>
-          Submit
-        </button>
+        <form onSubmit={handleSubmit}>
+          <label>
+            <input
+              name="Post"
+              type="text"
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="What's on your mind??"
+              required
+            />
+          </label>
+          <button type="submit" disabled={!message.trim()}>
+            Submit
+          </button>
+        </form>
         {posts.map((post) => (
           <Post post={post} key={post._id} />
         ))}
