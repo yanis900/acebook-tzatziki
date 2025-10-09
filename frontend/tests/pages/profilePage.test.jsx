@@ -1,10 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 import userEvent from "@testing-library/user-event";
-
 import { ProfilePage } from "../../src/pages/Profile/ProfilePage";
-import { getPosts, deletePost } from "../../src/services/posts";
-import { useNavigate } from "react-router-dom";
+import { getPosts, deletePost, createPost } from "../../src/services/posts";
 
 // Mock the services
 vi.mock("../../src/services/posts", () => {
@@ -22,11 +20,6 @@ vi.mock("react-router-dom", () => {
 
 describe("ProfilePage Delete Button", () => {
 
-import { ProfilePage } from "../../src/pages/Profile/ProfilePage";
-import { getPosts, createPost } from "../../src/services/posts";
-import { useNavigate } from "react-router-dom";
-
-import userEvent from "@testing-library/user-event";
 
 // Mocking the getPosts service
 vi.mock("../../src/services/posts", () => {
