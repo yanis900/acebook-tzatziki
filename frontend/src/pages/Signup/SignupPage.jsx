@@ -46,11 +46,10 @@ export function SignupPage() {
 
       validatePassword(password);
       await signup(firstname, lastname, email, password);
-      notify("Account Successfully Created", false);
-      setTimeout(() => {
-        console.log("Delayed for 2 seconds.");
-        navigate("/login");
-      }, "2000");
+      
+      navigate("/login", {
+        state: { message: "Account Successfully Created" },
+      });
     } catch (err) {
       notify(err);
       console.error(err);

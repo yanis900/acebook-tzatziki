@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { getPosts, createPost } from "../../services/posts";
 import Post from "../../components/Post";
 import ProfileButton from "../../components/ProfileButton";
@@ -29,6 +28,9 @@ export function FeedPage() {
   }, [navigate]);
 
   const token = localStorage.getItem("token");
+  // const userId = decodeToken(token)
+  // console.log(userId)
+  // console.log(userId.sub)
   if (!token) {
     navigate("/login");
     return;

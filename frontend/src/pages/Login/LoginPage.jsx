@@ -1,27 +1,31 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { login } from "../../services/authentication";
 import { toast, ToastContainer } from "react-toastify";
 
 export function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("1@1");
+  const [password, setPassword] = useState("Password1!");
   const navigate = useNavigate();
+  const location = useLocation();
 
     const notify = (message, err = true) =>
       err ? toast.error(`${message}`) : toast.success(`${message}`);
 
+      useEffect(() => {
+    if (location.state?.message) {
+      notify(location.state.message, false);
+      navigate(location.pathname, { replace: true });
+    }
+  }, [location.state, location.pathname, navigate]);
+  
   async function handleSubmit(event) {
     event.preventDefault();
     try {
       const token = await login(email, password);
       localStorage.setItem("token", token);
-      notify("Login Successful", false);
-      setTimeout(() => {
-        console.log("Delayed for 2 seconds.");
-        navigate("/posts");
-      }, "2000");
+        navigate("/posts", { state: { message: "Login Successful" } });
     } catch (err) {
       notify(err.message)
       console.error(err);
