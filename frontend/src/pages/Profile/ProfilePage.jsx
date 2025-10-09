@@ -77,9 +77,11 @@ export function ProfilePage() {
           </button>
         </form>
         {posts.map((post) => (
-          <Post post={post} key={post._id} />
-      <button onClick={() => handleDelete(post._id)}>Delete</button>
-        ))}
+        <div key={post._id}>
+          <Post post={post} />
+          <button onClick={() => handleDelete(post._id)}>Delete</button>
+        </div>
+      ))}
       </div>
       <FeedButton />
        <LogoutButton />
