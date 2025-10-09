@@ -5,7 +5,6 @@ import Post from "../../components/Post";
 import ProfileButton from "../../components/ProfileButton";
 import LogoutButton from "../../components/LogoutButton";
 
-
 export function FeedPage() {
   const [posts, setPosts] = useState([]);
   const [message, setMessage] = useState("");
@@ -65,7 +64,9 @@ export function FeedPage() {
           </button>
         </form>
         {posts.map((post) => (
-          <Post post={post} key={post._id} />
+          <div key={post._id}>
+            <Post post={post} key={post._id} />
+          </div>
         ))}
       </div>
       <ProfileButton />

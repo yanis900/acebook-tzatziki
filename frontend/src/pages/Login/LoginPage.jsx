@@ -5,8 +5,8 @@ import { login } from "../../services/authentication";
 import { toast, ToastContainer } from "react-toastify";
 
 export function LoginPage() {
-  const [email, setEmail] = useState("1@1");
-  const [password, setPassword] = useState("Password1!");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
 
