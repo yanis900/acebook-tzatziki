@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getPosts, createPost, deletePost } from "../../services/posts";
+import { createPost, deletePost, getUserPosts } from "../../services/posts";
+import { getMe } from "../../services/users";
 import Post from "../../components/Post";
 import LogoutButton from "../../components/LogoutButton";
 import FeedButton from "../../components/FeedButton";
@@ -8,14 +9,24 @@ import FeedButton from "../../components/FeedButton";
 export function ProfilePage() {
   const [posts, setPosts] = useState([]);
   const [message, setMessage] = useState("");
+  const [userId, setUserId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     const loggedIn = token !== null;
     if (loggedIn) {
-      getPosts(token)
+      getMe(token)
         .then((data) => {
+          console.log("id", data.id);
+          setUserId(data.id);
+        })
+        .catch((err) => {
+          console.error("Error fetching verified user info", err);
+        });
+      getUserPosts(token, userId)
+        .then((data) => {
+          console.log("data", data);
           setPosts(data.posts);
           localStorage.setItem("token", data.token);
         })
@@ -24,7 +35,7 @@ export function ProfilePage() {
           navigate("/login");
         });
     }
-  }, [navigate]);
+  }, [navigate, userId]);
 
   const token = localStorage.getItem("token");
   if (!token) {
@@ -35,7 +46,7 @@ export function ProfilePage() {
     try {
       e.preventDefault();
       await createPost(token, message);
-      const data = await getPosts(token);
+      const data = await getUserPosts(token,userId);
       setPosts(data.posts);
       localStorage.setItem("token", data.token);
     } catch (error) {
@@ -53,7 +64,7 @@ export function ProfilePage() {
 
     const token = localStorage.getItem("token");
     await deletePost(token, postId);
-    const updatedPosts = await getPosts(token);
+    const updatedPosts = await getUserPosts(token, userId);
     setPosts(updatedPosts.posts);
     localStorage.setItem("token", updatedPosts.token);
   };

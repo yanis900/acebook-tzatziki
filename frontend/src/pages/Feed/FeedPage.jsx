@@ -17,6 +17,7 @@ export function FeedPage() {
     if (loggedIn) {
       getPosts(token)
         .then((data) => {
+          console.log("data", data);
           setPosts(data.posts);
           localStorage.setItem("token", data.token);
         })
@@ -28,9 +29,6 @@ export function FeedPage() {
   }, [navigate]);
 
   const token = localStorage.getItem("token");
-  // const userId = decodeToken(token)
-  // console.log(userId)
-  // console.log(userId.sub)
   if (!token) {
     navigate("/login");
     return;
