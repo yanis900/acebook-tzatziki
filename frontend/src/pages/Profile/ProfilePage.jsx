@@ -26,6 +26,23 @@ export function ProfilePage() {
     }
   }, [navigate]);
 
+  const token = localStorage.getItem("token");
+  if (!token) {
+    navigate("/login");
+    return;
+  }
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      await createPost(token, message);
+      const data = await getPosts(token);
+      setPosts(data.posts);
+      localStorage.setItem("token", data.token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
   const handleDelete = async (postId) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this post?"
@@ -42,15 +59,30 @@ export function ProfilePage() {
   };
 
   return (
-    <div>
-      <h2>My Profile</h2>
-      <p>My Posts:</p>
-      {posts.map((post) => (
-        <div key={post._id}>
-          <Post post={post} />
-          <button onClick={() => handleDelete(post._id)}>Delete</button>
-        </div>
-      ))}
-    </div>
+    <>
+      <h2>Profile Page</h2>
+      <div className="feed" role="feed">
+        <form onSubmit={handleSubmit}>
+          <label>
+            <input
+              name="Post"
+              type="text"
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="What's on your mind??"
+              required
+            />
+          </label>
+          <button type="submit" disabled={!message.trim()}>
+            Submit
+          </button>
+        </form>
+        {posts.map((post) => (
+          <Post post={post} key={post._id} />
+      <button onClick={() => handleDelete(post._id)}>Delete</button>
+        ))}
+      </div>
+      <FeedButton />
+       <LogoutButton />
+    </>
   );
 }
