@@ -20,16 +20,28 @@ vi.mock("../../src/services/authentication", () => {
   return { signup: signupMock };
 });
 
+vi.mock("../../src/services/users", () => {
+  return {
+    getUser: vi.fn().mockResolvedValue(null),
+  };
+});
+
 // Reusable function for filling out signup form
 async function completeSignupForm() {
   const user = userEvent.setup();
 
+  const firstnameInputEl = screen.getByLabelText("Firstname:");
+  const lastnameInputEl = screen.getByLabelText("Lastname:");
   const emailInputEl = screen.getByLabelText("Email:");
   const passwordInputEl = screen.getByLabelText("Password:");
+  const confirmPasswordInputEl = screen.getByLabelText("Confirm Password:");
   const submitButtonEl = screen.getByRole("submit-button");
 
+  await user.type(firstnameInputEl, "John");
+  await user.type(lastnameInputEl, "Doe");
   await user.type(emailInputEl, "test@email.com");
-  await user.type(passwordInputEl, "1234");
+  await user.type(passwordInputEl, "1234678A!");
+  await user.type(confirmPasswordInputEl, "1234678A!");
   await user.click(submitButtonEl);
 }
 
@@ -43,12 +55,11 @@ describe("Signup Page", () => {
 
     await completeSignupForm();
 
-    expect(signup).toHaveBeenCalledWith("test@email.com", "1234");
+    expect(signup).toHaveBeenCalledWith("John", "Doe", "test@email.com", "1234678A!");
   });
 
   test("navigates to /login on successful signup", async () => {
     render(<SignupPage />);
-
     const navigateMock = useNavigate();
 
     await completeSignupForm();
@@ -58,10 +69,9 @@ describe("Signup Page", () => {
 
   test("navigates to /signup on unsuccessful signup", async () => {
     render(<SignupPage />);
-
-    signup.mockRejectedValue(new Error("Error signing up"));
     const navigateMock = useNavigate();
 
+    signup.mockRejectedValue(new Error("Error signing up"));
     await completeSignupForm();
 
     expect(navigateMock).toHaveBeenCalledWith("/signup");

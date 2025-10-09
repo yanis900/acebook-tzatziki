@@ -6,6 +6,8 @@ const User = require("../../models/user");
 describe("/tokens", () => {
   beforeAll(async () => {
     const user = new User({
+      firstname: "Auth",
+      lastname: "Test",
       email: "auth-test@test.com",
       password: "12345678",
     });
