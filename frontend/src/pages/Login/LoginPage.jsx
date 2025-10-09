@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import SignupButton from "../../components/SignupButton";
 import { login } from "../../services/authentication";
 
 export function LoginPage() {
@@ -48,6 +48,7 @@ export function LoginPage() {
         />
         <input role="submit-button" id="submit" type="submit" value="Submit" />
       </form>
+      <SignupButton />
     </>
   );
 }
