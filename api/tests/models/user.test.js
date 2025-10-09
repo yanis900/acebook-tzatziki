@@ -6,8 +6,30 @@ describe("User model", () => {
     await User.deleteMany({});
   });
 
+  it("has a first name", () => {
+    const user = new User({
+      firstname: "John",
+      lastname: "Doe",
+      email: "someone@example.com",
+      password: "password",
+    });
+    expect(user.firstname).toEqual("John");
+  });
+
+  it("has a last name", () => {
+    const user = new User({
+      firstname: "John",
+      lastname: "Doe",
+      email: "someone@example.com",
+      password: "password",
+    });
+    expect(user.lastname).toEqual("Doe");
+  });
+
   it("has an email address", () => {
     const user = new User({
+      firstname: "John",
+      lastname: "Doe",
       email: "someone@example.com",
       password: "password",
     });
@@ -16,6 +38,8 @@ describe("User model", () => {
 
   it("has a password", () => {
     const user = new User({
+      firstname: "John",
+      lastname: "Doe",
       email: "someone@example.com",
       password: "password",
     });
@@ -29,6 +53,8 @@ describe("User model", () => {
 
   it("can save a user", async () => {
     const user = new User({
+      firstname: "John",
+      lastname: "Doe",
       email: "someone@example.com",
       password: "password",
     });

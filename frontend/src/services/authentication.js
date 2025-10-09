@@ -28,8 +28,10 @@ export async function login(email, password) {
   }
 }
 
-export async function signup(email, password) {
+export async function signup(firstname, lastname, email, password) {
   const payload = {
+    firstname: firstname,
+    lastname: lastname,
     email: email,
     password: password,
   };

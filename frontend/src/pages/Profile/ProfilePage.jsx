@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getPosts, deletePost } from "../../services/posts";
+import { getPosts, createPost, deletePost } from "../../services/posts";
 import Post from "../../components/Post";
+import LogoutButton from "../../components/LogoutButton";
+import FeedButton from "../../components/FeedButton";
 
 export function ProfilePage() {
   const [posts, setPosts] = useState([]);
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
