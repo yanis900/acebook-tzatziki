@@ -12,7 +12,8 @@ export function SignupPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
 
-  const notify = (err) => toast.error(`${err}`);
+  const notify = (message, err = true) =>
+    err ? toast.error(`${message}`) : toast.success(`${message}`);
 
   const validatePassword = (password) => {
     if (password < 8) {
@@ -45,7 +46,11 @@ export function SignupPage() {
 
       validatePassword(password);
       await signup(firstname, lastname, email, password);
-      navigate("/login");
+      notify("Account Successfully Created", false);
+      setTimeout(() => {
+        console.log("Delayed for 2 seconds.");
+        navigate("/login");
+      }, "2000");
     } catch (err) {
       notify(err);
       console.error(err);
