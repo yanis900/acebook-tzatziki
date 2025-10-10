@@ -48,7 +48,7 @@ async function getMe(req, res) {
   const safeUser = user.toObject();
   delete safeUser.password;
 
-  res.status(200).json({ id: userId, firstname: user.firstname, lastname: user.lastname, email: user.email });
+  res.status(200).json({ id: userId, firstname: user.firstname, lastname: user.lastname, email: user.email, image: user.image });
 }
 
 const UsersController = {

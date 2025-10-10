@@ -2,16 +2,16 @@ import { render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 
 import { ProfilePage } from "../../src/pages/Profile/ProfilePage";
-import { getPosts, createPost } from "../../src/services/posts";
+import { createPost, getUserPosts } from "../../src/services/posts";
 import { useNavigate } from "react-router-dom";
 
 import userEvent from "@testing-library/user-event";
 
 // Mocking the getPosts service
 vi.mock("../../src/services/posts", () => {
-  const getPostsMock = vi.fn();
+  const getUserPostsMock = vi.fn();
   const createPostMock = vi.fn();
-  return { getPosts: getPostsMock, createPost: createPostMock };
+  return { getUserPosts: getUserPostsMock, createPost: createPostMock };
 });
 
 // Mocking React Router's useNavigate function
@@ -29,14 +29,14 @@ describe("Profile Page", () => {
   test("It displays posts from the backend", async () => {
     window.localStorage.setItem("token", "testToken");
 
-    const mockPosts = [{ _id: "12345", message: "Test Post 1" }];
+    const mockPosts = [{ _id: "12345", message: "Test Post 1", date: "2025-10-10T11:37:04.662Z" }];
 
-    getPosts.mockResolvedValue({ posts: mockPosts, token: "newToken" });
+    getUserPosts.mockResolvedValue({ posts: mockPosts, token: "newToken" });
 
     render(<ProfilePage />);
 
     const post = await screen.findByRole("article");
-    expect(post.textContent).toEqual("Test Post 1");
+    expect(post.textContent).toEqual("Test Post 1 - 10/10/2025");
   });
 
   test("It navigates to login if no token is present", async () => {
@@ -48,11 +48,11 @@ describe("Profile Page", () => {
   test("createPost creates post and appears on feed", async () => {
   window.localStorage.setItem("token", "testToken");
 
-  getPosts.mockResolvedValueOnce({ posts: [], token: "newToken" });
+  getUserPosts.mockResolvedValueOnce({ posts: [], token: "newToken" });
 
-  getPosts.mockResolvedValueOnce({ posts: [{ _id: "1", message: "Hello World" }], token: "newToken" });
+  getUserPosts.mockResolvedValueOnce({ posts: [{ _id: "1", message: "Hello World", date: "2025-10-10T11:37:04.662Z" }], token: "newToken" });
 
-  createPost.mockResolvedValueOnce({ _id: "1", message: "Hello World" });
+  createPost.mockResolvedValueOnce({ _id: "1", message: "Hello World", date: "2025-10-10T11:37:04.662Z" });
 
   render(<ProfilePage />);
 
@@ -62,7 +62,7 @@ describe("Profile Page", () => {
   const submit = screen.getByRole("button", { name: /submit/i });
   await userEvent.click(submit);
 
-  const post = await screen.findByText("Hello World");
+  const post = await screen.findByText("Hello World - 10/10/2025");
   expect(post).toBeDefined();
 
 })
