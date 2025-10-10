@@ -7,9 +7,11 @@ import ProfileButton from "../../components/ProfileButton";
 import LogoutButton from "../../components/LogoutButton";
 
 
+
 export function FeedPage() {
   const [posts, setPosts] = useState([]);
   const [message, setMessage] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -46,10 +48,34 @@ export function FeedPage() {
     }
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?name=${encodeURIComponent(searchQuery)}`);
+    }
+  };
+
   return (
     <>
       <h2>Feed Page</h2>
+
       <div className="feed" role="feed">
+        <form onSubmit={handleSearch}>
+          <label>
+            <input
+              name="Search"
+              type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search for a friend..."
+              required
+            />
+          </label>
+          <button type="submit" disabled={!searchQuery.trim()}>
+            Search
+          </button>
+        </form>
+
         <form onSubmit={handleSubmit}>
           <label>
             <input
@@ -64,10 +90,12 @@ export function FeedPage() {
             Submit
           </button>
         </form>
+
         {posts.map((post) => (
           <Post post={post} key={post._id} />
         ))}
       </div>
+
       <ProfileButton />
       <LogoutButton />
     </>
