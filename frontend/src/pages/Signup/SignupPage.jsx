@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { signup } from "../../services/authentication";
 import { getUser } from "../../services/users";
+import LoginButton from "../../components/LoginButton";
 
 export function SignupPage() {
   const [firstname, setFirstname] = useState("");
@@ -127,6 +128,7 @@ export function SignupPage() {
         />
         <input role="submit-button" id="submit" type="submit" value="Submit" />
       </form>
+      <LoginButton />
     </>
   );
 }

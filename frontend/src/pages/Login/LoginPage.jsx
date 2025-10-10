@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-
 import { login } from "../../services/authentication";
 import { toast, ToastContainer } from "react-toastify";
+import SignupButton from "../../components/SignupButton";
 
 export function LoginPage() {
   const [email, setEmail] = useState("");
@@ -64,6 +64,7 @@ export function LoginPage() {
         />
         <input role="submit-button" id="submit" type="submit" value="Submit" />
       </form>
+      <SignupButton />
     </>
   );
 }

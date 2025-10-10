@@ -6,12 +6,18 @@ import { createPost, getUserPosts } from "../../src/services/posts";
 import { useNavigate } from "react-router-dom";
 
 import userEvent from "@testing-library/user-event";
+import { getMe } from "../../src/services/users";
 
 // Mocking the getPosts service
 vi.mock("../../src/services/posts", () => {
   const getUserPostsMock = vi.fn();
   const createPostMock = vi.fn();
   return { getUserPosts: getUserPostsMock, createPost: createPostMock };
+});
+
+vi.mock("../../src/services/users", () => {
+  const getMeMock = vi.fn();
+  return { getMe: getMeMock };
 });
 
 // Mocking React Router's useNavigate function
@@ -29,14 +35,17 @@ describe("Profile Page", () => {
   test("It displays posts from the backend", async () => {
     window.localStorage.setItem("token", "testToken");
 
+    const mockUser = { id: "user123", firstname: "Test", lastname: "User", email: "test@example.com" }
     const mockPosts = [{ _id: "12345", message: "Test Post 1", date: "2025-10-10T11:37:04.662Z" }];
-
+    
+    getMe.mockResolvedValue(mockUser);
     getUserPosts.mockResolvedValue({ posts: mockPosts, token: "newToken" });
 
     render(<ProfilePage />);
 
-    const post = await screen.findByRole("article");
-    expect(post.textContent).toEqual("Test Post 1 - 10/10/2025");
+    const post = await screen.findByText("Test Post 1 - 10/10/2025");
+    expect(post).toBeDefined();
+
   });
 
   test("It navigates to login if no token is present", async () => {

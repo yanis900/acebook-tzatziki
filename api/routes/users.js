@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.post("/", UsersController.create);
 router.get("/", UsersController.getUser);
+router.get("/search", UsersController.getUserByName);
 router.get("/me", tokenChecker, UsersController.getMe);
 
 module.exports = router;

@@ -64,7 +64,9 @@ describe("Signup Page", () => {
 
     await completeSignupForm();
 
-    expect(navigateMock).toHaveBeenCalledWith("/login");
+    expect(navigateMock).toHaveBeenCalledWith("/login", {
+        state: { message: "Account Successfully Created" },
+      });
   });
 
   test("navigates to /signup on unsuccessful signup", async () => {

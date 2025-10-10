@@ -15,6 +15,23 @@ async function getUser(req, res) {
   res.status(200).json({ user: safeUser });
 }
 
+async function getUserByName(req, res) {
+  const name = req.query.name
+
+  const users = await User.find({
+    $or: [
+      { firstname: name },
+      { lastname: name }
+    ]
+  }).select("-password");
+
+  if (!users) {
+    return res.status(404).json({ message: "No user found with this name" });
+  }
+
+  res.status(200).json({ users: users});
+}
+
 async function create(req, res) {
   const firstname = req.body.firstname;
   const lastname = req.body.lastname;
@@ -54,7 +71,8 @@ async function getMe(req, res) {
 const UsersController = {
   create: create,
   getUser: getUser,
-  getMe: getMe,
+  getUserByName: getUserByName,
+  getMe:getMe
 };
 
 module.exports = UsersController;
