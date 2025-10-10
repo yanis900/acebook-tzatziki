@@ -1,13 +1,18 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getPosts, createPost, deletePost } from "../../services/posts";
+import { getUserById } from "../../services/users";
 import Post from "../../components/Post";
 import LogoutButton from "../../components/LogoutButton";
 import FeedButton from "../../components/FeedButton";
 
+
+
+
 export function ProfilePage() {
   const [posts, setPosts] = useState([]);
   const [message, setMessage] = useState("");
+  const [user, setUser] = useState(null); // store current user
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,8 +27,26 @@ export function ProfilePage() {
         .catch((err) => {
           console.error(err);
           navigate("/login");
-        });
+        }
+
+        );
     }
+  }, [navigate]);
+
+  useEffect(() => {
+    const userId = localStorage.getItem("id"); // store logged-in user ID in localStorage
+    if (!userId) {
+      navigate("/login");
+      return;
+    }
+
+    getUserById(userId)
+      .then((data) => {
+        setUser(data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }, [navigate]);
 
   const token = localStorage.getItem("token");
@@ -61,6 +84,15 @@ export function ProfilePage() {
   return (
     <>
       <h2>Profile Page</h2>
+      
+      {user && (
+        <div className="user-data">
+          <p><strong>First Name:</strong> {user.firstname}</p>
+          <p><strong>Last Name:</strong> {user.lastname}</p>
+          <p><strong>Email:</strong> {user.email}</p>
+        </div>
+    )}
+      
       <div className="feed" role="feed">
         <form onSubmit={handleSubmit}>
           <label>

@@ -44,7 +44,8 @@ export function SignupPage() {
       }
 
       validatePassword(password);
-      await signup(firstname, lastname, email, password);
+      const data = await signup(firstname, lastname, email, password);
+      localStorage.setItem("id", data.id)
       navigate("/login");
     } catch (err) {
       notify(err);
