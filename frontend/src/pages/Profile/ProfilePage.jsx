@@ -4,6 +4,7 @@ import { getPosts, createPost, deletePost } from "../../services/posts";
 import Post from "../../components/Post";
 import LogoutButton from "../../components/LogoutButton";
 import FeedButton from "../../components/FeedButton";
+import { ToastContainer, toast } from "react-toastify";
 
 export function ProfilePage() {
   const [posts, setPosts] = useState([]);
@@ -31,6 +32,9 @@ export function ProfilePage() {
     navigate("/login");
     return;
   }
+  const notify = (err) => toast.error(`${err}`);
+  const notifySuccess = (message) => toast.success(message);
+
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
@@ -42,25 +46,31 @@ export function ProfilePage() {
       console.log(error);
     }
   };
-  
+
   const handleDelete = async (postId) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this post?"
-    );
-    if (!confirmDelete) {
-      return; // User clicked "Cancel", so stop here
+    try {
+      const confirmDelete = window.confirm(
+        "Are you sure you want to delete this post?"
+      );
+      if (!confirmDelete) {
+        return; // User clicked "Cancel", so stop here
+      }
+
+      const token = localStorage.getItem("token");
+      await deletePost(token, postId);
+      const updatedPosts = await getPosts(token);
+      setPosts(updatedPosts.posts);
+      localStorage.setItem("token", updatedPosts.token);
+      notifySuccess("Post deleted successfully!");
+    } catch (err) {
+      notify(err);
+      console.error(err);
     }
-
-    const token = localStorage.getItem("token");
-    await deletePost(token, postId);
-    const updatedPosts = await getPosts(token);
-    setPosts(updatedPosts.posts);
-    localStorage.setItem("token", updatedPosts.token);
   };
-
   return (
     <>
       <h2>Profile Page</h2>
+      <ToastContainer closeOnClick />
       <div className="feed" role="feed">
         <form onSubmit={handleSubmit}>
           <label>
@@ -77,14 +87,14 @@ export function ProfilePage() {
           </button>
         </form>
         {posts.map((post) => (
-        <div key={post._id}>
-          <Post post={post} />
-          <button onClick={() => handleDelete(post._id)}>Delete</button>
-        </div>
-      ))}
+          <div key={post._id}>
+            <Post post={post} />
+            <button onClick={() => handleDelete(post._id)}>Delete</button>
+          </div>
+        ))}
       </div>
       <FeedButton />
-       <LogoutButton />
+      <LogoutButton />
     </>
   );
 }
