@@ -1,12 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { getPosts, createPost } from "../../services/posts";
 import Post from "../../components/Post";
 import ProfileButton from "../../components/ProfileButton";
 import LogoutButton from "../../components/LogoutButton";
-
-
 
 export function FeedPage() {
   const [posts, setPosts] = useState([]);
@@ -20,6 +17,7 @@ export function FeedPage() {
     if (loggedIn) {
       getPosts(token)
         .then((data) => {
+          console.log("data", data);
           setPosts(data.posts);
           localStorage.setItem("token", data.token);
         })
@@ -92,10 +90,11 @@ export function FeedPage() {
         </form>
 
         {posts.map((post) => (
-          <Post post={post} key={post._id} />
+          <div key={post._id}>
+            <Post post={post} key={post._id} />
+          </div>
         ))}
       </div>
-
       <ProfileButton />
       <LogoutButton />
     </>

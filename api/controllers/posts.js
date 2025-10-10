@@ -7,13 +7,27 @@ async function getAllPosts(req, res) {
   res.status(200).json({ posts: posts, token: token });
 }
 
+async function getUserPosts(req, res) {
+  const userId = req.user_id;
+  if (!userId) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
+
+  const posts = await Post.find({ user: userId });
+  const token = generateToken(userId);
+  res.status(200).json({ posts: posts, token: token });
+}
+
 async function createPost(req, res) {
-  const post = new Post(req.body);
-  post.save();
+  const userId = req.user_id;
+  const postData = { ...req.body, user: userId };
+  const post = new Post(postData);
+  await post.save();
 
   const newToken = generateToken(req.user_id);
-  res.status(201).json({ message: "Post created", token: newToken });
+  res.status(201).json({ message: "Post created", post: post, token: newToken });
 }
+
 async function deletePost(req, res) {
   const postId = req.params.id;
   const post = await Post.findById(postId);
@@ -29,6 +43,7 @@ async function deletePost(req, res) {
 
 const PostsController = {
   getAllPosts: getAllPosts,
+  getUserPosts: getUserPosts,
   createPost: createPost,
   deletePost: deletePost,
 };

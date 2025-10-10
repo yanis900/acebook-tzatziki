@@ -10,8 +10,10 @@ import { LoginPage } from "../../src/pages/Login/LoginPage";
 // Mocking React Router's useNavigate function
 vi.mock("react-router-dom", () => {
   const navigateMock = vi.fn();
+  const locationMock = vi.fn();
   const useNavigateMock = () => navigateMock; // Create a mock function for useNavigate
-  return { useNavigate: useNavigateMock };
+  const useLocationMock = () => locationMock
+  return { useNavigate: useNavigateMock, useLocation: useLocationMock };
 });
 
 // Mocking the login service
@@ -29,7 +31,7 @@ async function completeLoginForm() {
   const submitButtonEl = screen.getByRole("submit-button");
 
   await user.type(emailInputEl, "test@email.com");
-  await user.type(passwordInputEl, "1234");
+  await user.type(passwordInputEl, "Password1!");
   await user.click(submitButtonEl);
 }
 
@@ -43,7 +45,7 @@ describe("Login Page", () => {
 
     await completeLoginForm();
 
-    expect(login).toHaveBeenCalledWith("test@email.com", "1234");
+    expect(login).toHaveBeenCalledWith("test@email.com", "Password1!");
   });
 
   test("navigates to /posts on successful login", async () => {
@@ -54,7 +56,7 @@ describe("Login Page", () => {
 
     await completeLoginForm();
 
-    expect(navigateMock).toHaveBeenCalledWith("/posts");
+    expect(navigateMock).toHaveBeenCalledWith("/posts", { state: { message: "Login Successful" } });
   });
 
   test("navigates to /login on unsuccessful login", async () => {

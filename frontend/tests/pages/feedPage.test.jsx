@@ -29,14 +29,14 @@ describe("Feed Page", () => {
   test("It displays posts from the backend", async () => {
     window.localStorage.setItem("token", "testToken");
 
-    const mockPosts = [{ _id: "12345", message: "Test Post 1" }];
+    const mockPosts = [{ _id: "12345", message: "Test Post 1", date: "2025-10-10T11:37:04.662Z"}];
 
     getPosts.mockResolvedValue({ posts: mockPosts, token: "newToken" });
 
     render(<FeedPage />);
 
     const post = await screen.findByRole("article");
-    expect(post.textContent).toEqual("Test Post 1");
+    expect(post.textContent).toEqual("Test Post 1 - 10/10/2025");
   });
 
   test("It navigates to login if no token is present", async () => {
@@ -50,9 +50,9 @@ describe("Feed Page", () => {
 
   getPosts.mockResolvedValueOnce({ posts: [], token: "newToken" });
 
-  getPosts.mockResolvedValueOnce({ posts: [{ _id: "1", message: "Hello World" }], token: "newToken" });
+  getPosts.mockResolvedValueOnce({ posts: [{ _id: "1", message: "Hello World", date: "2025-10-10T11:37:04.662Z" }], token: "newToken" });
 
-  createPost.mockResolvedValueOnce({ _id: "1", message: "Hello World" });
+  createPost.mockResolvedValueOnce({ _id: "1", message: "Hello World", date: "2025-10-10T11:37:04.662Z" });
 
   render(<FeedPage />);
 
@@ -62,7 +62,7 @@ describe("Feed Page", () => {
   const submit = screen.getByRole("button", { name: /submit/i });
   await userEvent.click(submit);
 
-  const post = await screen.findByText("Hello World");
+  const post = await screen.findByText("Hello World - 10/10/2025");
   expect(post).toBeDefined();
 
 })

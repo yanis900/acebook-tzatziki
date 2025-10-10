@@ -19,16 +19,15 @@ export async function getPosts(token) {
   return data;
 }
 
-export async function getUserPosts(token, user_id) {
+export async function getUserPosts(token) {
  const requestOptions = { 
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({user_id: user_id})
   };
-
-  const response = await fetch(`${BACKEND_URL}/posts`, requestOptions);
+ 
+  const response = await fetch(`${BACKEND_URL}/posts/me`, requestOptions);
 
   if (response.status !== 200) {
     throw new Error("Unable to fetch posts");

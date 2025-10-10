@@ -1,5 +1,4 @@
 const User = require("../models/user");
-const { generateToken } = require("../lib/token");
 
 async function getUser(req, res) {
   const email = req.query.email
@@ -52,10 +51,28 @@ async function create(req, res) {
     });
 }
 
+async function getMe(req, res) {
+  const userId = req.user_id;
+  if (!userId) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  const safeUser = user.toObject();
+  delete safeUser.password;
+
+  res.status(200).json({ id: userId, firstname: user.firstname, lastname: user.lastname, email: user.email, image: user.image });
+}
+
 const UsersController = {
   create: create,
   getUser: getUser,
-  getUserByName: getUserByName
+  getUserByName: getUserByName,
+  getMe:getMe
 };
 
 module.exports = UsersController;
