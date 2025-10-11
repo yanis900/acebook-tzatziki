@@ -20,8 +20,8 @@ async function getUserByName(req, res) {
 
   const users = await User.find({
     $or: [
-      { firstname: name },
-      { lastname: name }
+      { firstname: { $regex: name, $options: 'i' } },
+      { lastname: { $regex: name, $options: 'i' } }
     ]
   }).select("-password");
 
