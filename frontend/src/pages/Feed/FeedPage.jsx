@@ -4,11 +4,15 @@ import { getPosts, createPost } from "../../services/posts";
 import Post from "../../components/Post";
 import ProfileButton from "../../components/ProfileButton";
 import LogoutButton from "../../components/LogoutButton";
+import { ToastContainer } from "react-toastify";
+import { PostForm } from "../../components/PostForm";
+import { SearchForm } from "../../components/SearchForm";
+import { notify } from "../../utils/notify";
 
 export function FeedPage() {
   const [posts, setPosts] = useState([]);
   const [message, setMessage] = useState("");
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,7 +21,6 @@ export function FeedPage() {
     if (loggedIn) {
       getPosts(token)
         .then((data) => {
-          console.log("data", data);
           setPosts(data.posts);
           localStorage.setItem("token", data.token);
         })
@@ -37,12 +40,14 @@ export function FeedPage() {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      await createPost(token, message);
+      const d = await createPost(token, message);
       const data = await getPosts(token);
       setPosts(data.posts);
+      notify(d.message, false);
       localStorage.setItem("token", data.token);
       setMessage("");
     } catch (error) {
+      notify(error);
       console.log(error);
     }
   };
@@ -57,39 +62,19 @@ export function FeedPage() {
   return (
     <>
       <h2>Feed Page</h2>
-
+      <ToastContainer closeOnClick />
       <div className="feed" role="feed">
-        <form onSubmit={handleSearch}>
-          <label>
-            <input
-              name="Search"
-              type="search"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search for a friend..."
-              required
-            />
-          </label>
-          <button type="submit" disabled={!searchQuery.trim()}>
-            Search
-          </button>
-        </form>
+        <SearchForm
+          handleSearch={handleSearch}
+          setSearchQuery={setSearchQuery}
+          searchQuery={searchQuery}
+        />
 
-        <form onSubmit={handleSubmit}>
-          <label>
-            <input
-              name="Post"
-              type="text"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="What's on your mind??"
-              required
-            />
-          </label>
-          <button type="submit" disabled={!message.trim()}>
-            Submit
-          </button>
-        </form>
+        <PostForm
+          handleSubmit={handleSubmit}
+          setMessage={setMessage}
+          message={message}
+        />
 
         {posts.map((post) => (
           <div key={post._id}>

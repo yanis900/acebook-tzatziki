@@ -2,7 +2,8 @@ const Post = require("../models/post");
 const { generateToken } = require("../lib/token");
 
 async function getAllPosts(req, res) {
-  const posts = await Post.find();
+  const posts = await Post.find().populate('user', '_id image').sort({ date: -1 }).exec();
+  console.log(posts)
   const token = generateToken(req.user_id);
   res.status(200).json({ posts: posts, token: token });
 }
@@ -13,7 +14,7 @@ async function getUserPosts(req, res) {
     return res.status(401).json({ message: "Not authenticated" });
   }
 
-  const posts = await Post.find({ user: userId });
+  const posts = await Post.find({ user: userId }).populate('user', '_id image').sort({ date: -1 }).exec();
   const token = generateToken(userId);
   res.status(200).json({ posts: posts, token: token });
 }

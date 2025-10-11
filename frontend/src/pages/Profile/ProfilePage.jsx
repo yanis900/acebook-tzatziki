@@ -5,7 +5,9 @@ import { getMe } from "../../services/users";
 import Post from "../../components/Post";
 import LogoutButton from "../../components/LogoutButton";
 import FeedButton from "../../components/FeedButton";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+import { PostForm } from "../../components/PostForm";
+import { notify } from "../../utils/notify";
 
 export function ProfilePage() {
   const [posts, setPosts] = useState([]);
@@ -50,21 +52,20 @@ export function ProfilePage() {
     navigate("/login");
     return;
   }
-  const notify = (err) => toast.error(`${err}`);
-  const notifySuccess = (message) => toast.success(message);
 
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      await createPost(token, message);
+      const d = await createPost(token, message);
       const data = await getUserPosts(token, userData.id);
       setPosts(data.posts);
+      notify(d.message, false);
       localStorage.setItem("token", data.token);
     } catch (error) {
       console.log(error);
     }
   };
-  
+
   const handleDelete = async (postId) => {
     try {
       const confirmDelete = window.confirm(
@@ -79,7 +80,7 @@ export function ProfilePage() {
       const updatedPosts = await getUserPosts(token, userData.id);
       setPosts(updatedPosts.posts);
       localStorage.setItem("token", updatedPosts.token);
-      notifySuccess("Post deleted successfully!");
+      notify("Post deleted successfully!", false);
     } catch (err) {
       notify(err);
       console.error(err);
@@ -87,12 +88,12 @@ export function ProfilePage() {
   };
 
   const convertToBase64 = (e) => {
-    const reader = new FileReader()
-    reader.readAsDataURL(e.target.files[0])
+    const reader = new FileReader();
+    reader.readAsDataURL(e.target.files[0]);
     reader.onload = () => {
-      console.log(reader.result)
-    }
-  }
+      console.log(reader.result);
+    };
+  };
 
   return (
     <>
@@ -100,7 +101,7 @@ export function ProfilePage() {
       <ToastContainer closeOnClick />
       {userData && (
         <div>
-          <img width={100} height={100} src={userData.image}/>
+          <img width={100} height={100} style={{'borderRadius': '50%'}} src={userData.image} />
           <p>First Name: {userData.firstname}</p>
           <p>Last Name: {userData.lastname}</p>
           <p>Email: {userData.email}</p>
@@ -108,26 +109,20 @@ export function ProfilePage() {
       )}
       <input accept="image/*" type="file" onChange={convertToBase64} />
       <div className="feed" role="feed">
-        <form onSubmit={handleSubmit}>
-          <label>
-            <input
-              name="Post"
-              type="text"
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="What's on your mind??"
-              required
-            />
-          </label>
-          <button type="submit" disabled={!message.trim()}>
-            Submit
-          </button>
-        </form>
+
+        <PostForm
+          handleSubmit={handleSubmit}
+          setMessage={setMessage}
+          message={message}
+        />
+
         {posts.map((post) => (
-            <div key={post._id}>
-              <Post post={post} />
-              <button onClick={() => handleDelete(post._id)}>Delete</button>
-            </div>
-          ))}
+          <div key={post._id}>
+            <Post post={post} />
+            <button onClick={() => handleDelete(post._id)}>Delete</button>
+          </div>
+        ))}
+
       </div>
       <FeedButton />
       <LogoutButton />
