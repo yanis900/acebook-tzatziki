@@ -50,3 +50,4 @@ jobs:
           cd api && npm test -- --watchAll=false
           # Frontend tests with Vitest, so can't use --watchAll flag
           cd ../frontend && npm test -- --run
+
