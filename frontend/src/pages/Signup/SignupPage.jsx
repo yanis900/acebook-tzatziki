@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { signup } from "../../services/authentication";
 import { getUser } from "../../services/users";
 import LoginButton from "../../components/LoginButton";
+import { notify } from "../../utils/notify";
+import { SignupForm } from "../../components/SignupForm";
+import { validatePassword } from "../../utils/password";
 
 export function SignupPage() {
   const [firstname, setFirstname] = useState("");
@@ -12,27 +15,6 @@ export function SignupPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
-
-  const notify = (message, err = true) =>
-    err ? toast.error(`${message}`) : toast.success(`${message}`);
-
-  const validatePassword = (password) => {
-    if (password < 8) {
-      throw new Error("Password Must Be Minimum 8 Characters");
-    }
-    if (password > 16) {
-      throw new Error("Password Must Be Maximum 16 Characters");
-    }
-    if (!/[A-Z]/.test(password)) {
-      throw new Error("Password Must Contain At Least 1 Capital Letter");
-    }
-    if (!/[0-9]/.test(password)) {
-      throw new Error("Password Must Contain At Least 1 Number");
-    }
-    if (!/[^a-zA-Z0-9]/.test(password)) {
-      throw new Error("Password Must Contain At Least 1 Special Character");
-    }
-  };
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -47,7 +29,7 @@ export function SignupPage() {
 
       validatePassword(password);
       await signup(firstname, lastname, email, password);
-      
+
       navigate("/login", {
         state: { message: "Account Successfully Created" },
       });
@@ -81,53 +63,19 @@ export function SignupPage() {
     <>
       <h2>Signup</h2>
       <ToastContainer closeOnClick />
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="firstname">Firstname:</label>
-        <input
-          id="firstname"
-          type="text"
-          value={firstname}
-          onChange={handleFirstNameChange}
-          required
-        />
-        <label htmlFor="lastname">Lastname:</label>
-        <input
-          id="lastname"
-          type="text"
-          value={lastname}
-          onChange={handleLastNameChange}
-          required
-        />
-        <label htmlFor="email">Email:</label>
-        <input
-          id="email"
-          type="email"
-          value={email}
-          onChange={handleEmailChange}
-          required
-        />
-        <label htmlFor="password">Password:</label>
-        <input
-          placeholder="Password"
-          id="password"
-          type="password"
-          value={password}
-          onChange={handlePasswordChange}
-          minLength={8}
-          maxLength={16}
-          required
-        />
-        <label htmlFor="confirm">Confirm Password:</label>
-        <input
-          placeholder="Confirm Password"
-          id="confirm"
-          type="password"
-          value={confirmPassword}
-          onChange={handleConfirmPasswordChange}
-          required
-        />
-        <input role="submit-button" id="submit" type="submit" value="Submit" />
-      </form>
+      <SignupForm
+        handleSubmit={handleSubmit}
+        handleFirstNameChange={handleFirstNameChange}
+        handleLastNameChange={handleLastNameChange}
+        handleEmailChange={handleEmailChange}
+        handlePasswordChange={handlePasswordChange}
+        handleConfirmPasswordChange={handleConfirmPasswordChange}
+        firstname={firstname}
+        lastname={lastname}
+        email={email}
+        password={password}
+        confirmPassword={confirmPassword}
+      />
       <LoginButton />
     </>
   );
