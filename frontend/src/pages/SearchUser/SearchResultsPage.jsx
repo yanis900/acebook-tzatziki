@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getUserByName } from "../../services/users";
+import { notify } from "../../utils/notify";
 
 export function SearchResultsPage() {
   const [results, setResults] = useState([]);
@@ -10,7 +11,7 @@ export function SearchResultsPage() {
 
   const token = localStorage.getItem("token");
   const query = new URLSearchParams(location.search).get("name");
-console.log(query)
+
   useEffect(() => {
     if (!token) {
       navigate("/login");
@@ -23,7 +24,7 @@ console.log(query)
           const data = await getUserByName(query);
           setResults(data.users || []);
         } catch (error) {
-          console.log(error);
+          notify(error)
         } finally {
           setLoading(false);
         }
