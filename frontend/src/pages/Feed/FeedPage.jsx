@@ -41,6 +41,7 @@ export function FeedPage() {
       const data = await getPosts(token);
       setPosts(data.posts);
       localStorage.setItem("token", data.token);
+      setMessage("");
     } catch (error) {
       console.log(error);
     }
@@ -79,6 +80,7 @@ export function FeedPage() {
             <input
               name="Post"
               type="text"
+              value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="What's on your mind??"
               required
