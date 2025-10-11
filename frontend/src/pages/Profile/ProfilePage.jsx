@@ -101,7 +101,7 @@ export function ProfilePage() {
       <ToastContainer closeOnClick />
       {userData && (
         <div>
-          <img width={100} height={100} src={userData.image} />
+          <img width={100} height={100} style={{'borderRadius': '50%'}} src={userData.image} />
           <p>First Name: {userData.firstname}</p>
           <p>Last Name: {userData.lastname}</p>
           <p>Email: {userData.email}</p>

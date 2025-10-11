@@ -46,7 +46,7 @@ export function SearchResultsPage() {
         <div>
           {results.map((user) => (
             <p key={user._id}>
-              {user.firstname} {user.lastname}
+              {user.firstname} {user.lastname} <img width={18} height={18} style={{'borderRadius': '50%'}} src={user?.image} alt="" /> 
             </p>
           ))}
         </div>
