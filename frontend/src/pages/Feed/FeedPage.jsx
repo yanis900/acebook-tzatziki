@@ -21,7 +21,6 @@ export function FeedPage() {
     if (loggedIn) {
       getPosts(token)
         .then((data) => {
-          console.log("data", data);
           setPosts(data.posts);
           localStorage.setItem("token", data.token);
         })
