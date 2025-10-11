@@ -45,6 +45,7 @@ export function FeedPage() {
       setPosts(data.posts);
       notify(d.message, false);
       localStorage.setItem("token", data.token);
+      setMessage("");
     } catch (error) {
       notify(error);
       console.log(error);
