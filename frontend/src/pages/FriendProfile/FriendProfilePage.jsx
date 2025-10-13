@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getMe, getUserBySlug } from "../../services/users";
+import { friendUser, getMe, getUserBySlug } from "../../services/users";
+import { FriendButton } from "../../components/FollowButton";
 
 export function FriendProfilePage() {
   const { userSlug } = useParams();
   const [userData, setUserData] = useState(null);
   const [me, setMe] = useState(null);
+  const [isFriend, setIsFriend] = useState(false)
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,14 +32,30 @@ export function FriendProfilePage() {
   }, [userSlug]);
 
   useEffect(() => {
-    if (me && userData && String(me.id) === String(userData._id)) {
-              navigate("/profile")
+    if (me && userData) {
+      if (String(me.id) === String(userData._id)) {
+        navigate("/profile");
+      }
+      if (me.friends.includes(userData._id)) {
+      setIsFriend(true)
     }
+    console.log(me.friends)
+  }
   }, [me, userData, navigate]);
 
-   if (!userData) return <p>Loading...</p>;
+  const handleFollow = async () => {
+    try {
+    const token = localStorage.getItem("token");
 
-   return (
+      await friendUser(token, me.id, userData._id)
+    } catch (error) {
+      console.error(error)
+    }
+  };
+
+  if (!userData) return <p>Loading...</p>;
+
+  return (
     <>
       <div>
         <img
@@ -49,7 +67,7 @@ export function FriendProfilePage() {
         <p>First Name: {userData.firstname}</p>
         <p>Last Name: {userData.lastname}</p>
         <p>Email: {userData.email}</p>
-        <p>Email: {userData._id}</p>
+        <FriendButton isFriend={isFriend} handleFollow={handleFollow}/>
       </div>
     </>
   );
