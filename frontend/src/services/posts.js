@@ -42,7 +42,7 @@ export async function createPost(token, message) {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
+      "Content-Type": "application/json", //telling the server what kind of data are you sending
     },
     body: JSON.stringify({ message: message }),
   };
@@ -111,6 +111,26 @@ export async function unlikePost(token, postId) {
 
   if (response.status !== 201) {
     throw new Error("Unable to unlike post");
+  }
+
+  const data = await response.json();
+  console.log(data);
+  return data;
+}
+
+export async function editPost(token, postId, message) {
+  const requestOptions = {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json", //telling the server what kind of data are you sending
+    },
+    body: JSON.stringify({ message: message }),
+  };
+  const response = await fetch(`${BACKEND_URL}/posts/${postId}/edit`, requestOptions);
+
+  if (response.status !== 200) {
+    throw new Error("Unable to edit post");
   }
 
   const data = await response.json();
