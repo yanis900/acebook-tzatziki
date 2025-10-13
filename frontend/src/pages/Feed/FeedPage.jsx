@@ -64,6 +64,7 @@ export function FeedPage() {
       <h2>Feed Page</h2>
       <ToastContainer closeOnClick />
       <div className="feed" role="feed">
+        
         <SearchForm
           handleSearch={handleSearch}
           setSearchQuery={setSearchQuery}

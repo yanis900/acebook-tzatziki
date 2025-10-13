@@ -36,7 +36,7 @@ describe("Feed Page", () => {
     render(<FeedPage />);
 
     const post = await screen.findByRole("article");
-    expect(post.textContent).toEqual("Test Post 1 - 10/10/2025");
+    expect(post.textContent).toEqual("Test Post 1 - 2 days ago");
   });
 
   test("It navigates to login if no token is present", async () => {
@@ -62,7 +62,7 @@ describe("Feed Page", () => {
   const submit = screen.getByRole("button", { name: /submit/i });
   await userEvent.click(submit);
 
-  const post = await screen.findByText("Hello World - 10/10/2025");
+  const post = await screen.findByText("Hello World - 2 days ago");
   expect(post).toBeDefined();
 
 })

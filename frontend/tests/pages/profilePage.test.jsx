@@ -43,7 +43,7 @@ describe("Profile Page", () => {
 
     render(<ProfilePage />);
 
-    const post = await screen.findByText("Test Post 1 - 10/10/2025");
+    const post = await screen.findByText("Test Post 1 - 2 days ago");
     expect(post).toBeDefined();
 
   });
@@ -71,7 +71,8 @@ describe("Profile Page", () => {
   const submit = screen.getByRole("button", { name: /submit/i });
   await userEvent.click(submit);
 
-  const post = await screen.findByText("Hello World - 10/10/2025");
+  const post = await screen.findByText("Hello World - 2 days ago");
+
   expect(post).toBeDefined();
 
 })
