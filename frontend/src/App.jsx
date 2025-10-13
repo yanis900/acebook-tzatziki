@@ -7,6 +7,7 @@ import { SignupPage } from "./pages/Signup/SignupPage";
 import { FeedPage } from "./pages/Feed/FeedPage";
 import { ProfilePage } from "./pages/Profile/ProfilePage";
 import { SearchResultsPage } from "./pages/SearchUser/SearchResultsPage";
+import { FriendProfilePage } from "./pages/FriendProfile/FriendProfilePage";
 
 // docs: https://reactrouter.com/en/main/start/overview
 const router = createBrowserRouter([
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
   {
     path: "/search",
     element: <SearchResultsPage />
+  },
+  {
+    path: "/profile/:userSlug",
+    element: <FriendProfilePage />
   }
 ]);
 
