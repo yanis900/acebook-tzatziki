@@ -44,3 +44,21 @@ export async function getMe(token) {
   const data = await response.json();
   return data;
 }
+
+export async function getUserBySlug(token, slug) {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await fetch(`${BACKEND_URL}/users/${slug}`, requestOptions);
+
+  if (response.status !== 200) {
+    throw new Error("Unable to fetch authenticated user");
+  }
+
+  const data = await response.json();
+  return data;
+}
