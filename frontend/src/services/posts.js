@@ -20,13 +20,13 @@ export async function getPosts(token) {
 }
 
 export async function getUserPosts(token) {
- const requestOptions = { 
+  const requestOptions = {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
     },
   };
- 
+
   const response = await fetch(`${BACKEND_URL}/posts/me`, requestOptions);
 
   if (response.status !== 200) {
@@ -36,7 +36,6 @@ export async function getUserPosts(token) {
   const data = await response.json();
   return data;
 }
-
 
 export async function createPost(token, message) {
   const requestOptions = {
@@ -72,6 +71,46 @@ export async function deletePost(token, postId) {
 
   if (response.status !== 200) {
     throw new Error("Unable to delete post");
+  }
+
+  const data = await response.json();
+  console.log(data);
+  return data;
+}
+
+export async function likePost(token, postId) {
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ postId: postId }),
+  };
+  const response = await fetch(`${BACKEND_URL}/posts/like`, requestOptions);
+
+  if (response.status !== 201) {
+    throw new Error("Unable to like post");
+  }
+
+  const data = await response.json();
+  console.log(data);
+  return data;
+}
+
+export async function unlikePost(token, postId) {
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ postId: postId }),
+  };
+  const response = await fetch(`${BACKEND_URL}/posts/unlike`, requestOptions);
+
+  if (response.status !== 201) {
+    throw new Error("Unable to unlike post");
   }
 
   const data = await response.json();
