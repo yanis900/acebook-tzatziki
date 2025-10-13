@@ -1,7 +1,7 @@
 const User = require("../models/user");
 
 async function getUser(req, res) {
-  const email = req.query.email
+  const email = req.query.email;
 
   const user = await User.findOne({ email: email });
 
@@ -11,25 +11,25 @@ async function getUser(req, res) {
 
   const safeUser = user.toObject();
   delete safeUser.password;
-  
+
   res.status(200).json({ user: safeUser });
 }
 
 async function getUserByName(req, res) {
-  const name = req.query.name
+  const name = req.query.name;
 
   const users = await User.find({
     $or: [
-      { firstname: { $regex: name, $options: 'i' } },
-      { lastname: { $regex: name, $options: 'i' } }
-    ]
+      { firstname: { $regex: name, $options: "i" } },
+      { lastname: { $regex: name, $options: "i" } },
+    ],
   }).select("-password");
 
   if (!users) {
     return res.status(404).json({ message: "No user found with this name" });
   }
 
-  res.status(200).json({ users: users});
+  res.status(200).json({ users: users });
 }
 
 async function create(req, res) {
@@ -65,14 +65,46 @@ async function getMe(req, res) {
   const safeUser = user.toObject();
   delete safeUser.password;
 
-  res.status(200).json({ id: userId, firstname: user.firstname, lastname: user.lastname, email: user.email, image: user.image });
+  res
+    .status(200)
+    .json({
+      id: userId,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
+      image: user.image,
+    });
+}
+
+async function getUserBySlug(req, res) {
+  const slug = req.params.slug;
+  if (!slug) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
+  const query = slug.split("-");
+
+  const user = await User.findOne(
+    { firstname: query[0], lastname: query[1]}
+  ).select('-password');
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+    if(query[2].length === 6 && user.id.endsWith(query[2])) {
+      res.status(200).json({ user: user });
+    } else {
+      return res.status(404).json({ message: "Id doesn't match" });
+  }
+
 }
 
 const UsersController = {
   create: create,
   getUser: getUser,
   getUserByName: getUserByName,
-  getMe:getMe
+  getMe: getMe,
+  getUserBySlug: getUserBySlug,
 };
 
 module.exports = UsersController;
