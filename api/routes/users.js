@@ -9,5 +9,6 @@ router.post("/", UsersController.create);
 router.get("/", UsersController.getUser);
 router.get("/search", UsersController.getUserByName);
 router.get("/me", tokenChecker, UsersController.getMe);
+router.get("/:slug", tokenChecker, UsersController.getUserBySlug);
 
 module.exports = router;
