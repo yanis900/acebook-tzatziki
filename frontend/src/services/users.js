@@ -44,3 +44,61 @@ export async function getMe(token) {
   const data = await response.json();
   return data;
 }
+
+export async function getUserBySlug(token, slug) {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await fetch(`${BACKEND_URL}/users/${slug}`, requestOptions);
+
+  if (response.status !== 200) {
+    throw new Error("Unable to fetch authenticated user");
+  }
+
+  const data = await response.json();
+  return data;
+}
+
+export async function friendUser(token, myId, otherId) {
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ myId: myId, otherId: otherId }),
+  };
+  const response = await fetch(`${BACKEND_URL}/users/friend`, requestOptions);
+
+  if (response.status !== 201) {
+    throw new Error("Unable to friend user");
+  }
+
+  const data = await response.json();
+  console.log(data);
+  return data;
+}
+
+export async function unFriendUser(token, myId, otherId) {
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ myId: myId, otherId: otherId }),
+  };
+  const response = await fetch(`${BACKEND_URL}/users/unfriend`, requestOptions);
+
+  if (response.status !== 201) {
+    throw new Error("Unable to unfriend user");
+  }
+
+  const data = await response.json();
+  console.log(data);
+  return data;
+}
