@@ -75,7 +75,27 @@ export async function friendUser(token, myId, otherId) {
   const response = await fetch(`${BACKEND_URL}/users/friend`, requestOptions);
 
   if (response.status !== 201) {
-    throw new Error("Unable to follow user");
+    throw new Error("Unable to friend user");
+  }
+
+  const data = await response.json();
+  console.log(data);
+  return data;
+}
+
+export async function unFriendUser(token, myId, otherId) {
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ myId: myId, otherId: otherId }),
+  };
+  const response = await fetch(`${BACKEND_URL}/users/unfriend`, requestOptions);
+
+  if (response.status !== 201) {
+    throw new Error("Unable to unfriend user");
   }
 
   const data = await response.json();

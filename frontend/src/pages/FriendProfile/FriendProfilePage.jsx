@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { friendUser, getMe, getUserBySlug } from "../../services/users";
+import { friendUser, getMe, getUserBySlug, unFriendUser } from "../../services/users";
 import { FriendButton } from "../../components/FollowButton";
 
 export function FriendProfilePage() {
@@ -43,11 +43,21 @@ export function FriendProfilePage() {
   }
   }, [me, userData, navigate]);
 
-  const handleFollow = async () => {
+  const handleAddFriend = async () => {
     try {
     const token = localStorage.getItem("token");
 
       await friendUser(token, me.id, userData._id)
+    } catch (error) {
+      console.error(error)
+    }
+  };
+
+  const handleRemoveFriend = async () => {
+    try {
+    const token = localStorage.getItem("token");
+
+      await unFriendUser(token, me.id, userData._id)
     } catch (error) {
       console.error(error)
     }
@@ -67,7 +77,7 @@ export function FriendProfilePage() {
         <p>First Name: {userData.firstname}</p>
         <p>Last Name: {userData.lastname}</p>
         <p>Email: {userData.email}</p>
-        <FriendButton isFriend={isFriend} handleFollow={handleFollow}/>
+        <FriendButton isFriend={isFriend} handleAddFriend={handleAddFriend} handleRemoveFriend={handleRemoveFriend}/>
       </div>
     </>
   );
