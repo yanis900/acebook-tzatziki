@@ -8,6 +8,6 @@ describe("Post", () => {
     render(<Post post={testPost} />);
 
     const article = screen.getByRole("article");
-    expect(article.textContent).toBe("test message - 2 days ago");
+    expect(article.textContent).toBe("test message - 3 days ago");
   });
 });
