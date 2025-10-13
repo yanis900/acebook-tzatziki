@@ -55,18 +55,50 @@ async function friendUser(req, res) {
   const myId = req.body.myId;
   const otherId = req.body.otherId;
 
+  // if otherId in my friends
+//   const isFriend = User.find({ id: myId, friends: { $elemMatch: { otherId } } });
+// isFriend.then((data) => {
+//   console.log('data', data)
+//   if (data.length === 0) {
+//     return
+//   }
+// })
   const user = User.updateOne({ _id: myId }, { $push: { friends: otherId } });
-  const otherUser = User.updateOne({ _id: otherId }, { $push: { friends: myId } });
-  
+  const otherUser = User.updateOne(
+    { _id: otherId },
+    { $push: { friends: myId } }
+  );
+
   Promise.all([user, otherUser])
-  .then(([userResult, otherUserResult]) => {
-    console.log("Friend added, id:", otherId.toString());
-    res.status(201).json({ message: "OK" });
-  })
-  .catch((err) => {
-    console.error(err);
-    res.status(400).json({ message: "Something went wrong" });
-  });
+    .then(([userResult, otherUserResult]) => {
+      console.log("Friend added, id:", otherId.toString());
+      res.status(201).json({ message: "OK" });
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(400).json({ message: "Something went wrong" });
+    });
+}
+
+async function unFriendUser(req, res) {
+  const myId = req.body.myId;
+  const otherId = req.body.otherId;
+
+  const user = User.updateOne({ _id: myId }, { $pull: { friends: otherId } });
+  const otherUser = User.updateOne(
+    { _id: otherId },
+    { $pull: { friends: myId } }
+  );
+
+  Promise.all([user, otherUser])
+    .then(([userResult, otherUserResult]) => {
+      console.log("Friend removed, id:", otherId.toString());
+      res.status(201).json({ message: "OK" });
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(400).json({ message: "Something went wrong" });
+    });
 }
 
 async function getMe(req, res) {
@@ -89,7 +121,7 @@ async function getMe(req, res) {
     lastname: user.lastname,
     email: user.email,
     image: user.image,
-    friends: user.friends
+    friends: user.friends,
   });
 }
 
@@ -122,7 +154,8 @@ const UsersController = {
   getUserByName: getUserByName,
   getMe: getMe,
   getUserBySlug: getUserBySlug,
-  friendUser: friendUser
+  friendUser: friendUser,
+  unFriendUser: unFriendUser,
 };
 
 module.exports = UsersController;
