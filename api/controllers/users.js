@@ -51,6 +51,24 @@ async function create(req, res) {
     });
 }
 
+async function friendUser(req, res) {
+  const myId = req.body.myId;
+  const otherId = req.body.otherId;
+
+  const user = User.updateOne({ _id: myId }, { $push: { friends: otherId } });
+  const otherUser = User.updateOne({ _id: otherId }, { $push: { friends: myId } });
+  
+  Promise.all([user, otherUser])
+  .then(([userResult, otherUserResult]) => {
+    console.log("Friend added, id:", otherId.toString());
+    res.status(201).json({ message: "OK" });
+  })
+  .catch((err) => {
+    console.error(err);
+    res.status(400).json({ message: "Something went wrong" });
+  });
+}
+
 async function getMe(req, res) {
   const userId = req.user_id;
   if (!userId) {
@@ -65,15 +83,14 @@ async function getMe(req, res) {
   const safeUser = user.toObject();
   delete safeUser.password;
 
-  res
-    .status(200)
-    .json({
-      id: userId,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      email: user.email,
-      image: user.image,
-    });
+  res.status(200).json({
+    id: userId,
+    firstname: user.firstname,
+    lastname: user.lastname,
+    email: user.email,
+    image: user.image,
+    friends: user.friends
+  });
 }
 
 async function getUserBySlug(req, res) {
@@ -83,20 +100,20 @@ async function getUserBySlug(req, res) {
   }
   const query = slug.split("-");
 
-  const user = await User.findOne(
-    { firstname: query[0], lastname: query[1]}
-  ).select('-password');
+  const user = await User.findOne({
+    firstname: query[0],
+    lastname: query[1],
+  }).select("-password");
 
   if (!user) {
     return res.status(404).json({ message: "User not found" });
   }
 
-    if(query[2].length === 6 && user.id.endsWith(query[2])) {
-      res.status(200).json({ user: user });
-    } else {
-      return res.status(404).json({ message: "Id doesn't match" });
+  if (query[2].length === 6 && user.id.endsWith(query[2])) {
+    res.status(200).json({ user: user });
+  } else {
+    return res.status(404).json({ message: "Id doesn't match" });
   }
-
 }
 
 const UsersController = {
@@ -105,6 +122,7 @@ const UsersController = {
   getUserByName: getUserByName,
   getMe: getMe,
   getUserBySlug: getUserBySlug,
+  friendUser: friendUser
 };
 
 module.exports = UsersController;
