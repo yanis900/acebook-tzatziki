@@ -162,7 +162,7 @@ export function ProfilePage() {
             />
             <button
               onClick={() => {
-                const newMessage = prompt("Edit your post:", post.text);
+                const newMessage = prompt("Edit your post:", post.message);
                 if (newMessage !== null) {
                   handleEdit(post._id, newMessage);
                 }
