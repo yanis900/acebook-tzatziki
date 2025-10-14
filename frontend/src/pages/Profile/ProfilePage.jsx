@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPost, deletePost, getUserPosts } from "../../services/posts";
-import { getMe } from "../../services/users";
+import { getMe, updateImage } from "../../services/users";
 import Post from "../../components/Post";
 import LogoutButton from "../../components/LogoutButton";
 import FeedButton from "../../components/FeedButton";
@@ -81,11 +81,17 @@ export function ProfilePage() {
   };
 
   const convertToBase64 = (e) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(e.target.files[0]);
-    reader.onload = () => {
-      console.log(reader.result);
-    };
+    try {
+      const reader = new FileReader();
+      reader.readAsDataURL(e.target.files[0]);
+      reader.onload = async () => {
+        console.log(reader.result);
+        await updateImage(token, userData.id, reader.result);
+      };
+
+    } catch (error) {
+      console.error("Error converting image to base64:", error);
+    }
   };
 
   return (

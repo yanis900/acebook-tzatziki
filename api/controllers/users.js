@@ -51,6 +51,24 @@ async function create(req, res) {
     });
 }
 
+async function updateImage(req, res) {
+  const base64 = req.body.base64;
+  const myId = req.body.myId;
+
+  const user = await User.updateOne({ _id: myId }, { image: base64 })
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  user.then(() => {
+      console.log("User image updated, id:", user._id.toString());
+      res.status(200).json({ message: "OK" });
+    }).catch((err) => {
+      console.error(err);
+      res.status(400).json({ message: "Something went wrong" });
+    });
+}
+
 async function friendUser(req, res) {
   const myId = req.body.myId;
   const otherId = req.body.otherId;
@@ -156,6 +174,7 @@ const UsersController = {
   getUserBySlug: getUserBySlug,
   friendUser: friendUser,
   unFriendUser: unFriendUser,
+  updateImage: updateImage,
 };
 
 module.exports = UsersController;

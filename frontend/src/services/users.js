@@ -102,3 +102,23 @@ export async function unFriendUser(token, myId, otherId) {
   console.log(data);
   return data;
 }
+
+export async function updateImage(token, myId, base64) {
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ myId: myId, base64: base64 }),
+  };
+  const response = await fetch(`${BACKEND_URL}/users/image`, requestOptions);
+
+  if (response.status !== 201) {
+    throw new Error("Unable to update user image");
+  }
+
+  const data = await response.json();
+  console.log(data);
+  return data;
+}

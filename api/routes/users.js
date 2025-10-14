@@ -8,6 +8,7 @@ const router = express.Router();
 router.post("/", UsersController.create);
 router.post("/friend", UsersController.friendUser);
 router.post("/unfriend", UsersController.unFriendUser);
+router.post("/image", UsersController.updateImage);
 router.get("/", UsersController.getUser);
 router.get("/search", UsersController.getUserByName);
 router.get("/me", tokenChecker, UsersController.getMe);

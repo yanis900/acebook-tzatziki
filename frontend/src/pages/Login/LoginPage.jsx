@@ -7,8 +7,8 @@ import { notify } from "../../utils/notify";
 import { LoginForm } from "../../components/LoginForm";
 
 export function  LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("yan@ait");
+  const [password, setPassword] = useState("Password1!");
   const location = useLocation();
   const navigate = useNavigate();
 
