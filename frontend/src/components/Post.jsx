@@ -58,6 +58,11 @@ function Post({ post, currentUserId }) {
         handleLike={handleLike}
         handleUnlike={handleUnlike}
       />
+      <div>
+        {post.likesBy.map((user) => (
+          <p key={user._id}>{user.firstname} {user.lastname}</p>
+        ))}
+      </div>
     </article>
   );
 }
