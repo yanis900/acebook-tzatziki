@@ -6,6 +6,7 @@ export function PostForm(props) {
             <input
               name="Post"
               type="text"
+              value={props.message}
               onChange={(e) => props.setMessage(e.target.value)}
               placeholder="What's on your mind??"
               required
