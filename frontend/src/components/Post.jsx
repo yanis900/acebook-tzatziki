@@ -103,6 +103,7 @@ function Post({ post, currentUserId, onLikeChange }) {
 
   return (
     <article key={post._id}>
+      <div style={{ display: "flex" }}>
       <img
         width={18}
         height={18}
@@ -118,6 +119,7 @@ function Post({ post, currentUserId, onLikeChange }) {
         handleUnlike={handleUnlike}
       />
       <LikesDisplay likesBy={post.likesBy} likeCount={likeCount} currentUserId={currentUserId} />
+      </div>
     </article>
   );
 }
