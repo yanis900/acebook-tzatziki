@@ -7,7 +7,7 @@ function SignupButton() {
     navigate("/signup");
   }
 
-  return <button onClick={goToSignup}>Sign Up</button>;
+  return <button className="link" onClick={goToSignup}>Sign Up</button>;
 }
 
 export default SignupButton;
