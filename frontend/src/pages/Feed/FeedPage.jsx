@@ -30,6 +30,7 @@ export function FeedPage() {
         });
       getPosts(token)
         .then((data) => {
+          console.log(data.posts)
           setPosts(data.posts);
           localStorage.setItem("token", data.token);
         })

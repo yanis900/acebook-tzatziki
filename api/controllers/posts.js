@@ -3,7 +3,7 @@ const { generateToken } = require("../lib/token");
 
 async function getAllPosts(req, res) {
   const posts = await Post.find()
-    .populate("user", "_id image")
+    .populate("user", "_id image").populate('likesBy', 'firstname lastname')
     .sort({ date: -1 })
     .exec();
   console.log(posts);
@@ -18,7 +18,7 @@ async function getUserPosts(req, res) {
   }
 
   const posts = await Post.find({ user: userId })
-    .populate("user", "_id image")
+    .populate("user", "_id image").populate('likesBy', 'firstname lastname')
     .sort({ date: -1 })
     .exec();
   const token = generateToken(userId);
