@@ -103,7 +103,6 @@ function Post({ post, currentUserId, onLikeChange }) {
 
   return (
     <article key={post._id}>
-      {post.message} - {getTimeDifference(post?.date && new Date(post.date))}
       <img
         width={18}
         height={18}
@@ -111,6 +110,7 @@ function Post({ post, currentUserId, onLikeChange }) {
         src={safeImageSrc} 
         alt={`${post.user?.firstname}'s profile`} 
       />
+        {post.message} - {getTimeDifference(post?.date && new Date(post.date))}
       <LikeButton
         isLiked={isLiked}
         likeCount={likeCount}
