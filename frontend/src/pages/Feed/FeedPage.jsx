@@ -88,7 +88,15 @@ export function FeedPage() {
 
         {posts.map((post) => (
           <div key={post._id}>
-            <Post post={post} currentUserId={currentUser?.id} key={post._id} />
+            <Post
+              post={post}
+              currentUserId={currentUser?.id}
+              key={post._id}
+              onLikeChange={async () => {
+                const data = await getPosts(token);
+                setPosts(data.posts);
+              }}
+            />
           </div>
         ))}
       </div>
