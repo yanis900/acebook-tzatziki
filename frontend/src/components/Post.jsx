@@ -98,6 +98,7 @@ function Post({ post, currentUserId, onLikeChange }) {
 
   return (
     <article key={post._id}>
+      <div style={{ display: "flex" }}>
       <img
         width={18}
         height={18}
@@ -105,7 +106,11 @@ function Post({ post, currentUserId, onLikeChange }) {
         src={post.user?.image}
         alt=""
         />
-        {post.message} - {getTimeDifference(post?.date && new Date(post.date))}
+        <div style={{ display: "flex", flexDirection: "column" }}>
+        <h3>{post.message}</h3> 
+        <p>{getTimeDifference(post?.date && new Date(post.date))}</p>
+        </div>
+        </div>
       <LikeButton
         isLiked={isLiked}
         likeCount={likeCount}
