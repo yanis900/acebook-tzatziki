@@ -61,22 +61,25 @@ export function SignupPage() {
 
   return (
     <>
-      <h2>Signup</h2>
       <ToastContainer closeOnClick />
-      <SignupForm
-        handleSubmit={handleSubmit}
-        handleFirstNameChange={handleFirstNameChange}
-        handleLastNameChange={handleLastNameChange}
-        handleEmailChange={handleEmailChange}
-        handlePasswordChange={handlePasswordChange}
-        handleConfirmPasswordChange={handleConfirmPasswordChange}
-        firstname={firstname}
-        lastname={lastname}
-        email={email}
-        password={password}
-        confirmPassword={confirmPassword}
-      />
-      <LoginButton />
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="bg-base-200 border-base-300 rounded-box w-full max-w-xs border p-4">
+          <SignupForm
+            handleSubmit={handleSubmit}
+            handleFirstNameChange={handleFirstNameChange}
+            handleLastNameChange={handleLastNameChange}
+            handleEmailChange={handleEmailChange}
+            handlePasswordChange={handlePasswordChange}
+            handleConfirmPasswordChange={handleConfirmPasswordChange}
+            firstname={firstname}
+            lastname={lastname}
+            email={email}
+            password={password}
+            confirmPassword={confirmPassword}
+          />
+          <LoginButton />
+        </div>
+      </div>
     </>
   );
 }
