@@ -8,19 +8,29 @@ import { ToastContainer } from "react-toastify";
 import { PostForm } from "../../components/PostForm";
 import { SearchForm } from "../../components/SearchForm";
 import { notify } from "../../utils/notify";
+import { getMe } from "../../services/users";
 
 export function FeedPage() {
   const [posts, setPosts] = useState([]);
   const [message, setMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     const loggedIn = token !== null;
     if (loggedIn) {
+      getMe(token)
+        .then((data) => {
+          setCurrentUser(data);
+        })
+        .catch((err) => {
+          console.error("Error fetching current user", err);
+        });
       getPosts(token)
         .then((data) => {
+          console.log(data.posts)
           setPosts(data.posts);
           localStorage.setItem("token", data.token);
         })
@@ -64,7 +74,6 @@ export function FeedPage() {
       <h2>Feed Page</h2>
       <ToastContainer closeOnClick />
       <div className="feed" role="feed">
-        
         <SearchForm
           handleSearch={handleSearch}
           setSearchQuery={setSearchQuery}
@@ -79,7 +88,15 @@ export function FeedPage() {
 
         {posts.map((post) => (
           <div key={post._id}>
-            <Post post={post} key={post._id} />
+            <Post
+              post={post}
+              currentUserId={currentUser?.id}
+              key={post._id}
+              onLikeChange={async () => {
+                const data = await getPosts(token);
+                setPosts(data.posts);
+              }}
+            />
           </div>
         ))}
       </div>

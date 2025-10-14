@@ -2,8 +2,11 @@ const Post = require("../models/post");
 const { generateToken } = require("../lib/token");
 
 async function getAllPosts(req, res) {
-  const posts = await Post.find().populate('user', '_id image').sort({ date: -1 }).exec();
-  console.log(posts)
+  const posts = await Post.find()
+    .populate("user", "_id image").populate('likesBy', 'firstname lastname')
+    .sort({ date: -1 })
+    .exec();
+  console.log(posts);
   const token = generateToken(req.user_id);
   res.status(200).json({ posts: posts, token: token });
 }
@@ -14,7 +17,10 @@ async function getUserPosts(req, res) {
     return res.status(401).json({ message: "Not authenticated" });
   }
 
-  const posts = await Post.find({ user: userId }).populate('user', '_id image').sort({ date: -1 }).exec();
+  const posts = await Post.find({ user: userId })
+    .populate("user", "_id image").populate('likesBy', 'firstname lastname')
+    .sort({ date: -1 })
+    .exec();
   const token = generateToken(userId);
   res.status(200).json({ posts: posts, token: token });
 }
@@ -26,7 +32,9 @@ async function createPost(req, res) {
   await post.save();
 
   const newToken = generateToken(req.user_id);
-  res.status(201).json({ message: "Post created", post: post, token: newToken });
+  res
+    .status(201)
+    .json({ message: "Post created", post: post, token: newToken });
 }
 
 async function deletePost(req, res) {
@@ -40,6 +48,38 @@ async function deletePost(req, res) {
 
   const newToken = generateToken(req.user_id);
   res.status(200).json({ message: "Post deleted", token: newToken });
+}
+
+async function likePost(req, res) {
+  const postId = req.body.postId;
+  const userId = req.user_id;
+
+  await Post.updateOne(
+    { _id: postId },
+    {
+      $addToSet: { likesBy: userId },
+      $inc: { likes: 1 },
+    }
+  );
+
+  const newToken = generateToken(req.user_id);
+  res.status(201).json({ message: "Post liked", token: newToken });
+}
+
+async function unlikePost(req, res) {
+  const postId = req.body.postId;
+  const userId = req.user_id;
+
+  await Post.updateOne(
+    { _id: postId },
+    {
+      $pull: { likesBy: userId },
+      $inc: { likes: -1 },
+    }
+  );
+
+  const newToken = generateToken(req.user_id);
+  res.status(201).json({ message: "Post unliked", token: newToken });
 }
 
 async function editPost(req, res) {
@@ -76,6 +116,8 @@ const PostsController = {
   getUserPosts: getUserPosts,
   createPost: createPost,
   deletePost: deletePost,
+  likePost: likePost,
+  unlikePost: unlikePost,
   editPost: editPost,
 };
 

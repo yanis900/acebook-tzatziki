@@ -124,7 +124,14 @@ export function ProfilePage() {
         
         {posts.map((post) => (
           <div key={post._id}>
-            <Post post={post} />
+            <Post
+              post={post}
+              currentUserId={userData?.id}
+              onLikeChange={async () => {
+                const data = await getUserPosts(token, userData.id);
+                setPosts(data.posts);
+              }}
+            />
             <button
               onClick={() => {
                 const newMessage = prompt("Edit your post:", post.message);

@@ -35,17 +35,29 @@ describe("Profile Page", () => {
   test("It displays posts from the backend", async () => {
     window.localStorage.setItem("token", "testToken");
 
-    const mockUser = { id: "user123", firstname: "Test", lastname: "User", email: "test@example.com" }
-    const mockPosts = [{ _id: "12345", message: "Test Post 1", date: "2025-10-10T11:37:04.662Z" }];
-    
+    const mockUser = {
+      id: "user123",
+      firstname: "Test",
+      lastname: "User",
+      email: "test@example.com",
+    };
+    const mockPosts = [
+      {
+        _id: "12345",
+        message: "Test Post 1",
+        date: "2025-10-10T11:37:04.662Z",
+      },
+    ];
+
     getMe.mockResolvedValue(mockUser);
     getUserPosts.mockResolvedValue({ posts: mockPosts, token: "newToken" });
 
     render(<ProfilePage />);
 
-    const post = await screen.findByText("Test Post 1 - 3 days ago");
+    const post = await screen.findByText(/Test Post 1.*4 days ago/, {
+      exact: false,
+    });
     expect(post).toBeDefined();
-
   });
 
   test("It navigates to login if no token is present", async () => {
@@ -55,25 +67,36 @@ describe("Profile Page", () => {
   });
 
   test("createPost creates post and appears on feed", async () => {
-  window.localStorage.setItem("token", "testToken");
+    window.localStorage.setItem("token", "testToken");
 
-  getUserPosts.mockResolvedValueOnce({ posts: [], token: "newToken" });
+    getUserPosts.mockResolvedValueOnce({ posts: [], token: "newToken" });
 
-  getUserPosts.mockResolvedValueOnce({ posts: [{ _id: "1", message: "Hello World", date: "2025-10-10T11:37:04.662Z" }], token: "newToken" });
+    getUserPosts.mockResolvedValueOnce({
+      posts: [
+        { _id: "1", message: "Hello World", date: "2025-10-10T11:37:04.662Z" },
+      ],
+      token: "newToken",
+    });
 
-  createPost.mockResolvedValueOnce({ _id: "1", message: "Hello World", date: "2025-10-10T11:37:04.662Z" });
+    createPost.mockResolvedValueOnce({
+      _id: "1",
+      message: "Hello World",
+      date: "2025-10-10T11:37:04.662Z",
+    });
 
-  render(<ProfilePage />);
+    render(<ProfilePage />);
 
-  const input = screen.getByPlaceholderText("What's on your mind??");
-  await userEvent.type(input, "Hello World");
+    const input = screen.getByPlaceholderText("What's on your mind??");
+    await userEvent.type(input, "Hello World");
 
-  const submit = screen.getByRole("button", { name: /submit/i });
-  await userEvent.click(submit);
+    const submit = screen.getByRole("button", { name: /submit/i });
+    await userEvent.click(submit);
 
-  const post = await screen.findByText("Hello World - 3 days ago");
+    // const post = await screen.findByText("Hello World - 4 days agoLike ");
 
-  expect(post).toBeDefined();
-
-})
+    const post = await screen.findByText(/Hello World.*4 days ago/, {
+      exact: false,
+    });
+    expect(post).toBeDefined();
+  });
 });
