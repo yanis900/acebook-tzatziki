@@ -1,6 +1,6 @@
 import { getTimeDifference } from "../utils/date";
 import { likePost, unlikePost } from "../services/posts";
-import { LikeButton } from "likeButton";
+import { LikeButton } from "./LikeButton";
 import { useState, useEffect } from "react";
 
 const LikesDisplay = ({ likesBy, likeCount, currentUserId }) => {
