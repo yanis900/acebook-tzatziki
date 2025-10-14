@@ -10,5 +10,6 @@ router.delete("/:id", PostsController.deletePost);
 router.post("/like", PostsController.likePost);
 router.post("/unlike", PostsController.unlikePost);
 router.put("/:id/edit", PostsController.editPost);
+router.get("/:id", PostsController.getFriendPosts);
 
 module.exports = router;
