@@ -27,14 +27,7 @@ export function ProfilePage() {
         .catch((err) => {
           console.error("Error fetching verified user info", err);
         });
-    }
-  }, []);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const loggedIn = token !== null;
-    if (loggedIn && userData) {
-      getUserPosts(token, userData.id)
+         getUserPosts(token)
         .then((data) => {
           console.log("data", data);
           setPosts(data.posts);
@@ -45,7 +38,7 @@ export function ProfilePage() {
           navigate("/login");
         });
     }
-  }, [navigate, userData]);
+  }, [navigate]);
 
   const token = localStorage.getItem("token");
   if (!token) {
