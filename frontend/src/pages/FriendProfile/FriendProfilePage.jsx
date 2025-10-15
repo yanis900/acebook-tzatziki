@@ -60,6 +60,7 @@ export function FriendProfilePage() {
     const token = localStorage.getItem("token");
 
       await friendUser(token, me.id, userData._id)
+      window.location.reload();
     } catch (error) {
       console.error(error)
     }
@@ -70,6 +71,7 @@ export function FriendProfilePage() {
     const token = localStorage.getItem("token");
 
       await unFriendUser(token, me.id, userData._id)
+      window.location.reload();
     } catch (error) {
       console.error(error)
     }
