@@ -1,3 +1,4 @@
+const { generateToken } = require("../lib/token");
 const User = require("../models/user");
 
 async function getUser(req, res) {

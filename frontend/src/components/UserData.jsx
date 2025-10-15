@@ -9,9 +9,13 @@ export function UserData(props) {
         <div className="card w-96 bg-base-100 shadow-xl">
             <figure className="px-10 pt-10">
                 <img
-                    src={props.userData.image}
-                    alt="Profile"
+                    src={props.userData.image.startsWith('data:') 
+                ? props.userData.image 
+                : `data:image/jpeg;base64,${props.userData.image}`
+              } 
+              alt="User profile"
                     className="rounded-full w-24 h-24 object-cover"
+                     
                 />
             </figure>
             <div className="card-body items-center text-center">
