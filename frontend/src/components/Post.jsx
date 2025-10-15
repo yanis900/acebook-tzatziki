@@ -1,7 +1,7 @@
 import { getTimeDifference } from "../utils/date";
 import { likePost, unlikePost } from "../services/posts";
 import { LikeButton } from "./LikeButton";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const LikesDisplay = ({ likesBy, likeCount, currentUserId }) => {
   const [showTooltip, setShowTooltip] = useState(false);
@@ -72,6 +72,11 @@ function Post({ post, currentUserId, onLikeChange }) {
       : `data:image/jpeg;base64,${rawImageSrc}`
     )
     : ''; // Fallback to an empty string if no image data
+  // Update state when post changes (after refresh)
+  useEffect(() => {
+    setIsLiked(post.likesBy?.some(user => user._id === currentUserId) || false);
+    setLikeCount(post.likes || 0);
+  }, [post, currentUserId]);
 
   const handleLike = async () => {
     try {
