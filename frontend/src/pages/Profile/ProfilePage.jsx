@@ -141,7 +141,6 @@ export function ProfilePage() {
 
         {posts.map((post) => (
           <div key={post._id}>
-            <ul className="list bg-base-100 rounded-box shadow-md">
               <Post
                 post={post}
                 currentUserId={userData?.id}
@@ -152,7 +151,6 @@ export function ProfilePage() {
                 onEdit={handleEdit}
                 onDelete={handleDelete}
               />
-            </ul>
           </div>
         ))}
       </div>
