@@ -45,9 +45,12 @@ export function SearchResultsPage() {
       ) : (
         <div>
           {results.map((user) => (
+            <>
+            <img width={18} height={18} style={{'borderRadius': '50%'}} src={user?.image} alt="" />
             <a key={user._id} href={`/profile/${user.firstname}-${user.lastname}-${user._id.slice(-6)}`}>
-              {user.firstname} {user.lastname} <img width={18} height={18} style={{'borderRadius': '50%'}} src={user?.image} alt="" /> 
+              {user.firstname} {user.lastname}  
             </a>
+            </>
           ))}
         </div>
       )}
