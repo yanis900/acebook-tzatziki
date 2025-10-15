@@ -51,23 +51,71 @@ async function create(req, res) {
     });
 }
 
+// async function updateImage(req, res) {
+//   const base64 = req.body.base64;
+//   const myId = req.body.myId;
+
+//   const user = await User.updateOne({ _id: myId }, { image: base64 })
+//   if (!user) {
+//     return res.status(404).json({ message: "User not found" });
+//   }
+
+//   user.then(() => {
+//       console.log("User image updated, id:", user._id.toString());
+//       res.status(200).json({ message: "OK" });
+//     }).catch((err) => {
+//       console.error(err);
+//       res.status(400).json({ message: "Something went wrong" });
+//     });
+// }
+
+// async function updateImage(req, res) {
+//   const base64 = req.body.base64;
+//   const myId = req.body.myId;
+  
+//   const user = await User.findByIdAndUpdate(
+//     myId, 
+//     { image: base64 },
+//     { new: true }); //make sure the new one is returned
+
+//   if (!user) {
+//      return res.status(404).json({ message: "User not found" });
+//   }
+  
+//   const newToken = generateToken(user._id);
+//   res.status(200).json({ message: "Image Updated", image: user.image, token: newToken });
+// }
+
 async function updateImage(req, res) {
-  const base64 = req.body.base64;
-  const myId = req.body.myId;
+  try {
+    const myId = req.body.myId;
+    console.log(myId);
+    
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
 
-  const user = await User.updateOne({ _id: myId }, { image: base64 })
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
+    // Convert uploaded file to base64
+    const base64 = req.file.buffer.toString("base64");
+
+    const user = await User.findByIdAndUpdate(
+      myId,
+      { image: base64 },
+      { new: true } // return updated user
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const newToken = generateToken(user._id);
+    res.status(200).json({ message: "Image Updated", image: user.image, token: newToken });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
-
-  user.then(() => {
-      console.log("User image updated, id:", user._id.toString());
-      res.status(200).json({ message: "OK" });
-    }).catch((err) => {
-      console.error(err);
-      res.status(400).json({ message: "Something went wrong" });
-    });
 }
+
 
 async function friendUser(req, res) {
   const myId = req.body.myId;

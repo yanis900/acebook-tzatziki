@@ -80,33 +80,72 @@ export function ProfilePage() {
     }
   };
 
-  const convertToBase64 = (e) => {
-    try {
-      const reader = new FileReader();
-      reader.readAsDataURL(e.target.files[0]);
-      reader.onload = async () => {
-        console.log(reader.result);
-        await updateImage(token, userData.id, reader.result);
-      };
+  // const convertToBase64 = (e) => {
+  //   try {
+  //     const reader = new FileReader();
+  //     reader.readAsDataURL(e.target.files[0]);
+  //     reader.onload = async () => {
+  //       console.log(reader.result);
+  //       const data = await updateImage(token, userData.id, reader.result);
+  //       //update user state with new image
+  //       setUserData(prev => ({ ...prev, image: data.image })); //copies all properties from the previous userData object into a new one
+  //       localStorage.setItem("token", data.token);
+  //     }; // Update the userData state, keeping everything the same except replacing the image with data.image
 
-    } catch (error) {
-      console.error("Error converting image to base64:", error);
-    }
+  //   } catch (error) {
+  //     console.error("Error converting image to base64:", error);
+  //   }
+  // };
+
+  const handleImageUpload = async (e) => {
+  try {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Send the file directly
+    const data = await updateImage(token, userData.id, file);
+
+    // Update user state with new image
+    setUserData(prev => ({ ...prev, image: data.image }));
+    // Update token in localStorage
+    localStorage.setItem("token", data.token);
+    e.target.value = null; 
+  } catch (error) {
+    console.error("Error uploading image:", error);
+  }
+};
+
+  const handleReload = () => {
+    window.location.reload();
   };
 
   return (
     <>
       <h2>Profile Page</h2>
       <ToastContainer closeOnClick />
-      {userData && (
+      {userData && ( // Check 1: Ensure userData exists
         <div>
-          <img width={100} height={100} style={{'borderRadius': '50%'}} src={userData.image} />
+          {/* Check 2: Ensure userData.image exists */}
+          {userData.image && ( 
+            <img 
+              width={100} 
+              height={100} 
+              style={{'borderRadius': '50%'}} 
+              // Check 3: Ensure the Base64 string has the necessary prefix
+              src={userData.image.startsWith('data:') 
+                ? userData.image 
+                : `data:image/jpeg;base64,${userData.image}`
+              } 
+              alt="User profile"
+            />
+          )}
           <p>First Name: {userData.firstname}</p>
           <p>Last Name: {userData.lastname}</p>
           <p>Email: {userData.email}</p>
         </div>
       )}
-      <input accept="image/*" type="file" onChange={convertToBase64} />
+      <input accept="image/*" type="file" onChange={handleImageUpload} />
+      <button onClick={handleReload}>Submit Image</button>
       <div className="feed" role="feed">
 
         <PostForm
