@@ -7,7 +7,7 @@ function LoginButton() {
     navigate("/login");
   }
 
-  return <button onClick={goToLogin}>Login</button>;
+  return <button className="link" onClick={goToLogin}>Login</button>;
 }
 
 export default LoginButton;

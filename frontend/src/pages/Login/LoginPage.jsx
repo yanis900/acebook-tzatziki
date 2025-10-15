@@ -6,7 +6,7 @@ import SignupButton from "../../components/SignupButton";
 import { notify } from "../../utils/notify";
 import { LoginForm } from "../../components/LoginForm";
 
-export function  LoginPage() {
+export function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const location = useLocation();
@@ -42,16 +42,19 @@ export function  LoginPage() {
 
   return (
     <>
-      <h2>Login</h2>
       <ToastContainer closeOnClick />
+      <div className="flex justify-center items-center min-h-screen">
+      <div className="bg-base-200 border-base-300 rounded-box w-xs border p-4">
       <LoginForm
         handleSubmit={handleSubmit}
         handleEmailChange={handleEmailChange}
         handlePasswordChange={handlePasswordChange}
         email={email}
         password={password}
-      />
+        />
       <SignupButton />
+        </div>
+      </div>
     </>
   );
 }
