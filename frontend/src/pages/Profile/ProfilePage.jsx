@@ -5,6 +5,7 @@ import { getMe, updateImage } from "../../services/users";
 import Post from "../../components/Post";
 import LogoutButton from "../../components/LogoutButton";
 import FeedButton from "../../components/FeedButton";
+import MyFriendsButton from "../../components/MyFriendsButton";
 import { ToastContainer } from "react-toastify";
 import { PostForm } from "../../components/PostForm";
 import { notify } from "../../utils/notify";
@@ -174,6 +175,7 @@ export function ProfilePage() {
           </div>
         ))}
       </div>
+      <MyFriendsButton />
       <FeedButton />
       <LogoutButton />
     </>
