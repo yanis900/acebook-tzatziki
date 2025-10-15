@@ -2,6 +2,7 @@ import { getTimeDifference } from "../utils/date";
 import { likePost, unlikePost } from "../services/posts";
 import { LikeButton } from "./LikeButton";
 import { useState, useEffect } from "react";
+import { capitalise } from "../utils/capitalise";
 
 const LikesDisplay = ({ likesBy, likeCount, currentUserId }) => {
   const [showTooltip, setShowTooltip] = useState(false);
@@ -9,15 +10,21 @@ const LikesDisplay = ({ likesBy, likeCount, currentUserId }) => {
   if (likeCount === 0) return null;
 
   // Sort so current user appears first
-  const sortedLikesBy = likesBy ? [...likesBy].sort((a, b) => {
-    if (a._id === currentUserId) return -1;
-    if (b._id === currentUserId) return 1;
-    return 0;
-  }) : [];
+  const sortedLikesBy = likesBy
+    ? [...likesBy].sort((a, b) => {
+        if (a._id === currentUserId) return -1;
+        if (b._id === currentUserId) return 1;
+        return 0;
+      })
+    : [];
 
   return (
     <div
-      style={{ position: "relative", display: "inline-block", marginLeft: "8px" }}
+      style={{
+        position: "relative",
+        display: "inline-block",
+        marginLeft: "8px",
+      }}
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
     >
@@ -40,7 +47,7 @@ const LikesDisplay = ({ likesBy, likeCount, currentUserId }) => {
             boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
             zIndex: 1000,
             whiteSpace: "nowrap",
-            fontSize: "14px"
+            fontSize: "14px",
           }}
         >
           {sortedLikesBy.map((user, index) => (
@@ -56,9 +63,16 @@ const LikesDisplay = ({ likesBy, likeCount, currentUserId }) => {
   );
 };
 
-function Post({ post, currentUserId, onLikeChange }) {
+function Post({
+  post,
+  currentUserId,
+  onLikeChange,
+  onEdit,
+  onDelete,
+  allowOwnerActions = true,
+}) {
   const [isLiked, setIsLiked] = useState(
-    post.likesBy?.some(user => user._id === currentUserId) || false
+    post.likesBy?.some((user) => user._id === currentUserId) || false
   );
   const [likeCount, setLikeCount] = useState(post.likes || 0);
 
@@ -66,15 +80,16 @@ function Post({ post, currentUserId, onLikeChange }) {
   const rawImageSrc = post.user?.image;
 
   // Apply the Base64 prefix check to ensure it's a valid Data URL
-  const safeImageSrc = rawImageSrc 
-    ? (rawImageSrc.startsWith('data:') 
-      ? rawImageSrc 
+  const safeImageSrc = rawImageSrc
+    ? rawImageSrc.startsWith("data:")
+      ? rawImageSrc
       : `data:image/jpeg;base64,${rawImageSrc}`
-    )
-    : ''; // Fallback to an empty string if no image data
+    : ""; // Fallback to an empty string if no image data
   // Update state when post changes (after refresh)
   useEffect(() => {
-    setIsLiked(post.likesBy?.some(user => user._id === currentUserId) || false);
+    setIsLiked(
+      post.likesBy?.some((user) => user._id === currentUserId) || false
+    );
     setLikeCount(post.likes || 0);
   }, [post, currentUserId]);
 
@@ -106,26 +121,95 @@ function Post({ post, currentUserId, onLikeChange }) {
     }
   };
 
+  const isOwner = Boolean(
+    allowOwnerActions &&
+      currentUserId &&
+      post.user &&
+      String(currentUserId) === String(post.user._id)
+  );
+
   return (
-    <article key={post._id}>
-      <div style={{ display: "flex" }}>
-      <img
-        width={18}
-        height={18}
-        style={{ borderRadius: "50%" }}
-        src={safeImageSrc} 
-        alt={`${post.user?.firstname}'s profile`} 
-      />
-        {post.message} - {getTimeDifference(post?.date && new Date(post.date))}
-      <LikeButton
-        isLiked={isLiked}
-        likeCount={likeCount}
-        handleLike={handleLike}
-        handleUnlike={handleUnlike}
-      />
-      <LikesDisplay likesBy={post.likesBy} likeCount={likeCount} currentUserId={currentUserId} />
+    <article key={post._id} className="mb-4 max-w-md mx-auto">
+  <div className="flex flex-col p-4 border rounded-lg shadow bg-base-100">
+    {/* User Info */}
+    <div className="flex items-center gap-3">
+      <div className="avatar">
+        <div className="w-8 rounded-full">
+          <img
+            src={safeImageSrc}
+            alt={`${post.user?.firstname}'s profile`}
+          />
+        </div>
       </div>
-    </article>
+      <div className="text-left">
+        <h4 className="font-semibold text-sm">
+          {capitalise(post.user?.firstname)} {capitalise(post.user?.lastname)}
+        </h4>
+        <p className="text-xs text-gray-500">
+          {getTimeDifference(post?.date && new Date(post.date))}
+        </p>
+      </div>
+    </div>
+
+    {/* Message */}
+    <p className="text-left py-3 text-sm max-h-40 overflow-auto break-words border-b border-gray-200">
+      {post.message}
+    </p>
+
+    {/* Actions: Like + Edit/Delete */}
+    <div className="flex justify-between items-center pt-3">
+      <div className="flex items-center gap-3">
+        <LikeButton
+          isLiked={isLiked}
+          likeCount={likeCount}
+          handleLike={handleLike}
+          handleUnlike={handleUnlike}
+        />
+        <LikesDisplay
+          likesBy={post.likesBy}
+          likeCount={likeCount}
+          currentUserId={currentUserId}
+        />
+      </div>
+
+      {isOwner && (
+        <div className="flex gap-2">
+          <button
+            onClick={() => {
+              try {
+                const newMessage = prompt("Edit your post:", post.message);
+                if (newMessage !== null && typeof onEdit === "function") {
+                  onEdit(post._id, newMessage);
+                }
+              } catch (err) {
+                console.error("Error editing post:", err);
+              }
+            }}
+            className="btn btn-sm btn-outline"
+          >
+            Edit
+          </button>
+
+          <button
+            onClick={() => {
+              try {
+                if (window.confirm("Are you sure you want to delete this post?")) {
+                  if (typeof onDelete === "function") onDelete(post._id);
+                }
+              } catch (err) {
+                console.error("Error deleting post:", err);
+              }
+            }}
+            className="btn btn-sm btn-error text-white"
+          >
+            Delete
+          </button>
+        </div>
+      )}
+    </div>
+  </div>
+</article>
+
   );
 }
 

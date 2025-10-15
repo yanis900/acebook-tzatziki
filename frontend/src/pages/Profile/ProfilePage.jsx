@@ -146,18 +146,9 @@ export function ProfilePage() {
                   const data = await getUserPosts(token, userData.id);
                   setPosts(data.posts);
                 }}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
               />
-              <button
-                onClick={() => {
-                  const newMessage = prompt("Edit your post:", post.message);
-                  if (newMessage !== null) {
-                    handleEdit(post._id, newMessage);
-                  }
-                }}
-              >
-                Edit
-              </button>
-              <button onClick={() => handleDelete(post._id)}>Delete</button>
             </ul>
           </div>
         ))}

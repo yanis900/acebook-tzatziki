@@ -96,6 +96,7 @@ export function FeedPage() {
                 const data = await getPosts(token);
                 setPosts(data.posts);
               }}
+              allowOwnerActions={false}
             />
           </div>
         ))}

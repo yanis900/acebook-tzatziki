@@ -1,9 +1,6 @@
+import { capitalise } from "../utils/capitalise";
 
 export function UserData(props) { 
-    const capitalize = (str) => {
-        if (!str) return '';
-        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-    }
 
     return (
         <div className="card w-96 bg-base-100 shadow-xl">
@@ -20,7 +17,7 @@ export function UserData(props) {
             </figure>
             <div className="card-body items-center text-center">
                 <h2 className="card-title">
-                    {capitalize(props.userData.firstname)} {capitalize(props.userData.lastname)}
+                    {capitalise(props.userData.firstname)} {capitalise(props.userData.lastname)}
                 </h2>
                 <p>{props.userData.email}</p>
             </div>
