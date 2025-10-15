@@ -51,19 +51,34 @@ async function create(req, res) {
     });
 }
 
+async function getFriends(req, res) {
+  const myId = req.user_id;
+
+  if (!myId) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
+
+  try {
+    const user = await User.findOne({ _id: myId }); 
+    if (!user) {
+      console.log("User not found with ID:", myId);
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const friends = await Promise.all(
+      user.friends.map((id) => User.findById(id).select("-password"))
+    );
+    res.status(200).json({ message: "OK", friends: friends });
+  } catch (err) {
+    console.error("Error in getFriends:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
 async function friendUser(req, res) {
   const myId = req.body.myId;
   const otherId = req.body.otherId;
-
-  // if otherId in my friends
-//   const isFriend = User.find({ id: myId, friends: { $elemMatch: { otherId } } });
-// isFriend.then((data) => {
-//   console.log('data', data)
-//   if (data.length === 0) {
-//     return
-//   }
-// })
-  const user = User.updateOne({ _id: myId }, { $push: { friends: otherId } });
+  const user = User.updateOne({ _id: myId }, { $set: { friends: otherId } });
   const otherUser = User.updateOne(
     { _id: otherId },
     { $push: { friends: myId } }
@@ -156,6 +171,7 @@ const UsersController = {
   getUserBySlug: getUserBySlug,
   friendUser: friendUser,
   unFriendUser: unFriendUser,
+  getFriends: getFriends,
 };
 
 module.exports = UsersController;

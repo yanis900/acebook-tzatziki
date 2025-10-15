@@ -63,6 +63,25 @@ export async function getUserBySlug(token, slug) {
   return data;
 }
 
+export async function getFriends(token) {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await fetch(`${BACKEND_URL}/users/friends`, requestOptions);
+
+  if (response.status !== 200) {
+    throw new Error("Unable to fetch friends");
+  }
+
+  const data = await response.json();
+  console.log(data)
+  return data;
+}
+
 export async function friendUser(token, myId, otherId) {
   const requestOptions = {
     method: "POST",

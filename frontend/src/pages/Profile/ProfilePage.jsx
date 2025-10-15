@@ -1,13 +1,20 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { createPost, deletePost, getUserPosts, editPost} from "../../services/posts";
+import {
+  createPost,
+  deletePost,
+  getUserPosts,
+  editPost,
+} from "../../services/posts";
 import { getMe } from "../../services/users";
 import Post from "../../components/Post";
 import LogoutButton from "../../components/LogoutButton";
 import FeedButton from "../../components/FeedButton";
+import MyFriendsButton from "../../components/MyFriendsButton";
 import { ToastContainer } from "react-toastify";
 import { PostForm } from "../../components/PostForm";
 import { notify } from "../../utils/notify";
+import { UserData } from "../../components/UserData";
 
 export function ProfilePage() {
   const [posts, setPosts] = useState([]);
@@ -27,7 +34,7 @@ export function ProfilePage() {
         .catch((err) => {
           console.error("Error fetching verified user info", err);
         });
-         getUserPosts(token)
+      getUserPosts(token)
         .then((data) => {
           console.log("data", data);
           setPosts(data.posts);
@@ -105,47 +112,42 @@ export function ProfilePage() {
     <>
       <h2>Profile Page</h2>
       <ToastContainer closeOnClick />
-      {userData && (
-        <div>
-          <img width={100} height={100} style={{'borderRadius': '50%'}} src={userData.image} />
-          <p>First Name: {userData.firstname}</p>
-          <p>Last Name: {userData.lastname}</p>
-          <p>Email: {userData.email}</p>
-        </div>
-      )}
+      {userData && <UserData userData={userData} />}
       <input accept="image/*" type="file" onChange={convertToBase64} />
       <div className="feed" role="feed">
-
         <PostForm
           handleSubmit={handleSubmit}
           setMessage={setMessage}
           message={message}
         />
-        
+
         {posts.map((post) => (
           <div key={post._id}>
-            <Post
-              post={post}
-              currentUserId={userData?.id}
-              onLikeChange={async () => {
-                const data = await getUserPosts(token, userData.id);
-                setPosts(data.posts);
-              }}
-            />
-            <button
-              onClick={() => {
-                const newMessage = prompt("Edit your post:", post.message);
-                if (newMessage !== null) {
-                  handleEdit(post._id, newMessage);
-                }
-              }}
-            >
-              Edit
-            </button>
-            <button onClick={() => handleDelete(post._id)}>Delete</button>
+            <ul className="list bg-base-100 rounded-box shadow-md">
+              <Post
+                post={post}
+                currentUserId={userData?.id}
+                onLikeChange={async () => {
+                  const data = await getUserPosts(token, userData.id);
+                  setPosts(data.posts);
+                }}
+              />
+              <button
+                onClick={() => {
+                  const newMessage = prompt("Edit your post:", post.message);
+                  if (newMessage !== null) {
+                    handleEdit(post._id, newMessage);
+                  }
+                }}
+              >
+                Edit
+              </button>
+              <button onClick={() => handleDelete(post._id)}>Delete</button>
+            </ul>
           </div>
         ))}
       </div>
+      <MyFriendsButton />
       <FeedButton />
       <LogoutButton />
     </>

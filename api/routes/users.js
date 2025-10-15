@@ -11,6 +11,7 @@ router.post("/unfriend", UsersController.unFriendUser);
 router.get("/", UsersController.getUser);
 router.get("/search", UsersController.getUserByName);
 router.get("/me", tokenChecker, UsersController.getMe);
+router.get("/friends", tokenChecker, UsersController.getFriends);
 router.get("/:slug", tokenChecker, UsersController.getUserBySlug);
 
 module.exports = router;
