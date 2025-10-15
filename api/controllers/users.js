@@ -119,32 +119,27 @@ async function updateImage(req, res) {
 
 async function getFriends(req, res) {
   const myId = req.user_id;
-  console.log("req.user_id:", myId);
 
   if (!myId) {
     return res.status(401).json({ message: "Not authenticated" });
   }
 
   try {
-    const user = await User.findOne({ _id: myId }); // optionally cast to ObjectId
+    const user = await User.findOne({ _id: myId }); 
     if (!user) {
       console.log("User not found with ID:", myId);
       return res.status(404).json({ message: "User not found" });
     }
 
     const friends = await Promise.all(
-      user.friends.map((id) =>
-        User.findById(id).select("-password")
-      )
+      user.friends.map((id) => User.findById(id).select("-password"))
     );
-
-    res.status(200).json({ message: "OK", friends: friends.filter(Boolean) });
+    res.status(200).json({ message: "OK", friends: friends });
   } catch (err) {
     console.error("Error in getFriends:", err);
     res.status(500).json({ message: "Internal server error" });
   }
 }
-
 
 async function friendUser(req, res) {
   const myId = req.body.myId;

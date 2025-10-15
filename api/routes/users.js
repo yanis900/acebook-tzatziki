@@ -19,7 +19,7 @@ router.put("/image",upload.single("image"), UsersController.updateImage);
 router.get("/", UsersController.getUser);
 router.get("/search", UsersController.getUserByName);
 router.get("/me", tokenChecker, UsersController.getMe);
-router.get("/:slug", tokenChecker, UsersController.getUserBySlug);
 router.get("/friends", tokenChecker, UsersController.getFriends);
+router.get("/:slug", tokenChecker, UsersController.getUserBySlug);
 
 module.exports = router;
