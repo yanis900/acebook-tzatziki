@@ -130,86 +130,87 @@ function Post({
 
   return (
     <article key={post._id} className="mb-4 max-w-md mx-auto">
-  <div className="flex flex-col p-4 border rounded-lg shadow bg-base-100">
-    {/* User Info */}
-    <div className="flex items-center gap-3">
-      <div className="avatar">
-        <div className="w-8 rounded-full">
-          <img
-            src={safeImageSrc}
-            alt={`${post.user?.firstname}'s profile`}
-          />
+      <div className="flex flex-col p-4 border rounded-lg shadow bg-base-100">
+        <div className="flex items-center gap-3">
+          <div className="avatar">
+            <div className="w-8 rounded-full">
+              <img
+                src={safeImageSrc}
+                alt={`${post.user?.firstname}'s profile`}
+              />
+            </div>
+          </div>
+          <div className="text-left">
+            <h4 className="font-semibold text-sm">
+              {capitalise(post.user?.firstname)}{" "}
+              {capitalise(post.user?.lastname)}
+            </h4>
+            <p className="text-xs text-gray-500">
+              {getTimeDifference(post?.date && new Date(post.date))}
+            </p>
+          </div>
         </div>
-      </div>
-      <div className="text-left">
-        <h4 className="font-semibold text-sm">
-          {capitalise(post.user?.firstname)} {capitalise(post.user?.lastname)}
-        </h4>
-        <p className="text-xs text-gray-500">
-          {getTimeDifference(post?.date && new Date(post.date))}
+
+        <p className="text-left py-3 text-sm max-h-40 overflow-auto break-words border-b border-gray-200">
+          {post.message}
         </p>
-      </div>
-    </div>
 
-    {/* Message */}
-    <p className="text-left py-3 text-sm max-h-40 overflow-auto break-words border-b border-gray-200">
-      {post.message}
-    </p>
+        <div className="flex justify-between items-center pt-3">
+          <div className="flex items-center gap-3">
+            <LikeButton
+              isLiked={isLiked}
+              likeCount={likeCount}
+              handleLike={handleLike}
+              handleUnlike={handleUnlike}
+            />
+            <LikesDisplay
+              likesBy={post.likesBy}
+              likeCount={likeCount}
+              currentUserId={currentUserId}
+            />
+          </div>
 
-    {/* Actions: Like + Edit/Delete */}
-    <div className="flex justify-between items-center pt-3">
-      <div className="flex items-center gap-3">
-        <LikeButton
-          isLiked={isLiked}
-          likeCount={likeCount}
-          handleLike={handleLike}
-          handleUnlike={handleUnlike}
-        />
-        <LikesDisplay
-          likesBy={post.likesBy}
-          likeCount={likeCount}
-          currentUserId={currentUserId}
-        />
-      </div>
+          {isOwner && (
+            <div className="flex gap-2">
+              <button
+                onClick={() => {
+                  try {
+                    const newMessage = prompt("Edit your post:", post.message);
+                    if (newMessage !== null && typeof onEdit === "function") {
+                      onEdit(post._id, newMessage);
+                    }
+                  } catch (err) {
+                    console.error("Error editing post:", err);
+                  }
+                }}
+                className="btn btn-sm btn-outline"
+              >
+                Edit
+              </button>
 
-      {isOwner && (
-        <div className="flex gap-2">
-          <button
-            onClick={() => {
-              try {
-                const newMessage = prompt("Edit your post:", post.message);
-                if (newMessage !== null && typeof onEdit === "function") {
-                  onEdit(post._id, newMessage);
-                }
-              } catch (err) {
-                console.error("Error editing post:", err);
-              }
-            }}
-            className="btn btn-sm btn-outline"
-          >
-            Edit
-          </button>
-
-          <button
-            onClick={() => {
-              try {
-                if (window.confirm("Are you sure you want to delete this post?")) {
-                  if (typeof onDelete === "function") onDelete(post._id);
-                }
-              } catch (err) {
-                console.error("Error deleting post:", err);
-              }
-            }}
-            className="btn btn-sm btn-error text-white"
-          >
-            Delete
-          </button>
+              <button
+                onClick={() => {
+                  try {
+                    if (
+                      window.confirm(
+                        "Are you sure you want to delete this post?"
+                      )
+                    ) {
+                      if (typeof onDelete === "function") onDelete(post._id);
+                    }
+                  } catch (err) {
+                    console.error("Error deleting post:", err);
+                  }
+                }}
+                className="btn btn-sm btn-error text-white"
+              >
+                Delete
+              </button>
+            </div>
+          )}
         </div>
-      )}
-    </div>
-  </div>
-</article>
-
+      </div>
+    </article>
   );
 }
 

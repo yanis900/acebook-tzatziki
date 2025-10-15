@@ -124,11 +124,14 @@ export function ProfilePage() {
 
   return (
     <>
-      <h2>Profile Page</h2>
+      <h2 className="text-2xl font-bold">My Profile</h2>
       <ToastContainer closeOnClick />
       {userData && <UserData userData={userData} />}
-      <input accept="image/*" type="file" onChange={handleImageUpload} />
-      <button onClick={handleReload}>Submit Image</button>
+      <div className="flex items-center justify-center gap-4">
+
+      <input accept="image/*" type="file" onChange={handleImageUpload} className="file-input"/>
+      <button onClick={handleReload} className="btn btn-sm btn-outline">Submit Image</button>
+      </div>
       <div className="feed" role="feed">
         <PostForm
           handleSubmit={handleSubmit}

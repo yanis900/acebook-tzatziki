@@ -25,7 +25,8 @@ export function ListFriendsPage() {
 
   return (
     <div>
-      <h2>My Friends</h2>
+      <h2 className="text-2xl font-bold">My Friends</h2>
+
       {results.length === 0 ? (
         <p>No friends found.</p>
       ) : (
