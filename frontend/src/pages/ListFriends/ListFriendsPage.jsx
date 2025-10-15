@@ -6,24 +6,22 @@ import { getFriends} from "../../services/users";
 export function ListFriendsPage() {
   const [results, setResults] = useState([]);
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-
+  
   useEffect(() => {
+    const token = localStorage.getItem("token");
     if (!token) {
       navigate("/login");
       return;
     }
     getFriends(token)
       .then((data) => {
-        console.log("data", data);
-        setResults(data.users || []);
-        localStorage.setItem("token", data.token);
+        setResults(data.friends || []);
       })
       .catch((err) => {
         console.error(err);
         notify(err);
       });
-  }, [token, navigate]);
+  }, [navigate]);
 
   return (
     <div>
