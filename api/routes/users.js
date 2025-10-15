@@ -12,5 +12,6 @@ router.get("/", UsersController.getUser);
 router.get("/search", UsersController.getUserByName);
 router.get("/me", tokenChecker, UsersController.getMe);
 router.get("/:slug", tokenChecker, UsersController.getUserBySlug);
+router.get("/friends", tokenChecker, UsersController.getFriends);
 
 module.exports = router;
