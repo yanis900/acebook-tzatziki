@@ -78,6 +78,12 @@ export function FriendProfilePage() {
     try {
       const token = localStorage.getItem("token");
 
+      const confirmRemove = window.confirm(
+        "Are you sure you want to remove this friend?"
+      );
+      if (!confirmRemove) {
+        return;
+      }
       await unFriendUser(token, me.id, userData._id);
       window.location.reload();
     } catch (error) {
