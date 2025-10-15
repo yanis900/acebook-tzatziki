@@ -96,6 +96,7 @@ export function FriendProfilePage() {
   return (
     <>
       <div>
+        <h2 className="text-2xl font-bold">{userData.firstname}&apos;s Feed</h2>
         {userData && <UserData userData={userData} />}
         <FriendButton
           isFriend={isFriend}

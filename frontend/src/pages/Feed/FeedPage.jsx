@@ -71,7 +71,7 @@ export function FeedPage() {
 
   return (
     <>
-      <h2>Feed Page</h2>
+      <h2 className="text-2xl font-bold">My Feed</h2>
       <ToastContainer closeOnClick />
       <div className="feed" role="feed">
         <SearchForm
@@ -96,6 +96,7 @@ export function FeedPage() {
                 const data = await getPosts(token);
                 setPosts(data.posts);
               }}
+              allowOwnerActions={false}
             />
           </div>
         ))}
