@@ -131,6 +131,10 @@ export async function unlikePost(token, postId) {
   if (response.status !== 201) {
     throw new Error("Unable to unlike post");
   }
+
+  const data = await response.json();
+  console.log(data);
+  return data;
 }
 
 export async function editPost(token, postId, message) {

@@ -62,6 +62,16 @@ function Post({ post, currentUserId, onLikeChange }) {
   );
   const [likeCount, setLikeCount] = useState(post.likes || 0);
 
+  // Get the image source, with a fallback if user or image doesn't exist
+  const rawImageSrc = post.user?.image;
+
+  // Apply the Base64 prefix check to ensure it's a valid Data URL
+  const safeImageSrc = rawImageSrc 
+    ? (rawImageSrc.startsWith('data:') 
+      ? rawImageSrc 
+      : `data:image/jpeg;base64,${rawImageSrc}`
+    )
+    : ''; // Fallback to an empty string if no image data
   // Update state when post changes (after refresh)
   useEffect(() => {
     setIsLiked(post.likesBy?.some(user => user._id === currentUserId) || false);
@@ -103,14 +113,10 @@ function Post({ post, currentUserId, onLikeChange }) {
         width={18}
         height={18}
         style={{ borderRadius: "50%" }}
-        src={post.user?.image}
-        alt=""
-        />
-        <div style={{ display: "flex", flexDirection: "column" }}>
-        <h3>{post.message}</h3> 
-        <p>{getTimeDifference(post?.date && new Date(post.date))}</p>
-        </div>
-        </div>
+        src={safeImageSrc} 
+        alt={`${post.user?.firstname}'s profile`} 
+      />
+        {post.message} - {getTimeDifference(post?.date && new Date(post.date))}
       <LikeButton
         isLiked={isLiked}
         likeCount={likeCount}
@@ -118,6 +124,7 @@ function Post({ post, currentUserId, onLikeChange }) {
         handleUnlike={handleUnlike}
       />
       <LikesDisplay likesBy={post.likesBy} likeCount={likeCount} currentUserId={currentUserId} />
+      </div>
     </article>
   );
 }

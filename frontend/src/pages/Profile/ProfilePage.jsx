@@ -6,7 +6,7 @@ import {
   getUserPosts,
   editPost,
 } from "../../services/posts";
-import { getMe } from "../../services/users";
+import { getMe, updateImage } from "../../services/users";
 import Post from "../../components/Post";
 import LogoutButton from "../../components/LogoutButton";
 import FeedButton from "../../components/FeedButton";
@@ -100,12 +100,26 @@ export function ProfilePage() {
     }
   };
 
-  const convertToBase64 = (e) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(e.target.files[0]);
-    reader.onload = () => {
-      console.log(reader.result);
-    };
+  const handleImageUpload = async (e) => {
+    try {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      // Send the file directly
+      const data = await updateImage(token, userData.id, file);
+
+      // Update user state with new image
+      setUserData((prev) => ({ ...prev, image: data.image }));
+      // Update token in localStorage
+      localStorage.setItem("token", data.token);
+      e.target.value = null;
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+  };
+
+  const handleReload = () => {
+    window.location.reload();
   };
 
   return (
@@ -113,7 +127,8 @@ export function ProfilePage() {
       <h2>Profile Page</h2>
       <ToastContainer closeOnClick />
       {userData && <UserData userData={userData} />}
-      <input accept="image/*" type="file" onChange={convertToBase64} />
+      <input accept="image/*" type="file" onChange={handleImageUpload} />
+      <button onClick={handleReload}>Submit Image</button>
       <div className="feed" role="feed">
         <PostForm
           handleSubmit={handleSubmit}

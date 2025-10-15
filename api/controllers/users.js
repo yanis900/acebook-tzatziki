@@ -1,3 +1,4 @@
+const { generateToken } = require("../lib/token");
 const User = require("../models/user");
 
 async function getUser(req, res) {
@@ -49,6 +50,36 @@ async function create(req, res) {
       console.error(err);
       res.status(400).json({ message: "Something went wrong" });
     });
+}
+
+async function updateImage(req, res) {
+  try {
+    const myId = req.body.myId;
+    console.log(myId);
+    
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    // Convert uploaded file to base64
+    const base64 = req.file.buffer.toString("base64");
+
+    const user = await User.findByIdAndUpdate(
+      myId,
+      { image: base64 },
+      { new: true } // return updated user
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const newToken = generateToken(user._id);
+    res.status(200).json({ message: "Image Updated", image: user.image, token: newToken });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
 }
 
 async function getFriends(req, res) {
@@ -171,6 +202,7 @@ const UsersController = {
   getUserBySlug: getUserBySlug,
   friendUser: friendUser,
   unFriendUser: unFriendUser,
+  updateImage: updateImage,
   getFriends: getFriends,
 };
 

@@ -121,3 +121,47 @@ export async function unFriendUser(token, myId, otherId) {
   console.log(data);
   return data;
 }
+
+// export async function updateImage(token, myId, base64) {
+//   const requestOptions = {
+//     method: "PUT",
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({ myId: myId, base64: base64 }),
+//   };
+//   const response = await fetch(`${BACKEND_URL}/users/image`, requestOptions);
+
+//   if (!response.ok) {
+//     throw new Error("Unable to update user image");
+//   }
+
+//   const data = await response.json();
+//   console.log(data);
+//   return data;
+// }
+
+export async function updateImage(token, myId, file) {
+  const formData = new FormData();
+  formData.append("myId", myId);
+  formData.append("image", file); // file from <input type="file">
+
+  const response = await fetch(`${BACKEND_URL}/users/image`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      // Do NOT set Content-Type for FormData
+    },
+    body: formData,
+  });
+  console.log("TOKEN", token);
+
+  if (!response.ok) {
+    throw new Error("Unable to update user image");
+  }
+
+  const data = await response.json();
+  console.log(data);
+  return data;
+}
