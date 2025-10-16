@@ -2,10 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SearchForm } from "./SearchForm";
 import LogoutButton from "./LogoutButton";
-import ProfileButton from "./ProfileButton";
 import logo from "../assets/ChatGPT clear .png";
 
-export function Navbar({ currentUser }) {
+export function Navbar() {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
@@ -48,35 +47,51 @@ export function Navbar({ currentUser }) {
               </div>
             </div>
 
-            {/* RIGHT: avatar dropdown (slightly inset) */}
-            <div className="dropdown dropdown-end pr-8 lg:pr-12 xl:pr-16">
-              <div
-                tabIndex={0}
-                role="button"
-                className="btn btn-circle avatar border-2 border-[#2B98BA] bg-[#4DBCDB] hover:opacity-90"
+            {/* RIGHT: Profile, Friends links and avatar dropdown */}
+            <div className="flex items-center gap-4 pr-8 lg:pr-12 xl:pr-16">
+              {/* Profile Link */}
+              <a
+                href="/profile"
+                className="text-[#2B98BA] hover:text-[#4DBCDB] font-semibold transition-colors whitespace-nowrap"
               >
-                <div className="w-9 h-9 rounded-full overflow-hidden">
-                  {/* <img
-                    alt={currentUser?.firstname || "User"}
-                    src={
-                      currentUser?.image.startsWith("data:")
-                        ? currentUser?.image
-                        : `data:image/jpeg;base64,${currentUser.image}`
-                    }
-                  /> */}
+                Profile
+              </a>
+
+              {/* Friends Link */}
+              <a
+                href="/friends"
+                className="text-[#2B98BA] hover:text-[#4DBCDB] font-semibold transition-colors whitespace-nowrap"
+              >
+                Friends
+              </a>
+
+              {/* Avatar dropdown */}
+              <div className="dropdown dropdown-end">
+                <div
+                  tabIndex={0}
+                  role="button"
+                  className="btn btn-circle avatar border-2 border-[#2B98BA] bg-[#4DBCDB] hover:opacity-90"
+                >
+                  <div className="w-9 h-9 rounded-full overflow-hidden">
+                    {/* <img
+                      alt={currentUser?.firstname || "User"}
+                      src={
+                        currentUser?.image.startsWith("data:")
+                          ? currentUser?.image
+                          : `data:image/jpeg;base64,${currentUser.image}`
+                      }
+                    /> */}
+                  </div>
                 </div>
+                <ul
+                  tabIndex={-1}
+                  className="menu menu-sm dropdown-content rounded-box z-[60] mt-3 w-52 p-2 shadow-lg border-2 border-[#EAF0D4] bg-[#FEFEF5]"
+                >
+                  <li>
+                    <LogoutButton />
+                  </li>
+                </ul>
               </div>
-              <ul
-                tabIndex={-1}
-                className="menu menu-sm dropdown-content rounded-box z-[60] mt-3 w-52 p-2 shadow-lg border-2 border-[#EAF0D4] bg-[#FEFEF5]"
-              >
-                <li>
-                  <ProfileButton />
-                </li>
-                <li>
-                  <LogoutButton />
-                </li>
-              </ul>
             </div>
           </div>
         </div>
