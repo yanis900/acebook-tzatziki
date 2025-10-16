@@ -48,6 +48,9 @@ export function Navbar({ currentUser }) {
               </div>
             </div>
 
+            {/* <MyFriendsButton /> */}
+            {/* <FeedButton /> */}
+
             {/* RIGHT: avatar dropdown (slightly inset) */}
             <div className="dropdown dropdown-end pr-8 lg:pr-12 xl:pr-16">
               <div
@@ -55,15 +58,22 @@ export function Navbar({ currentUser }) {
                 role="button"
                 className="btn btn-circle avatar border-2 border-[#2B98BA] bg-[#4DBCDB] hover:opacity-90"
               >
-                <div className="w-9 h-9 rounded-full overflow-hidden">
-                  {/* <img
-                    alt={currentUser?.firstname || "User"}
-                    src={
-                      currentUser?.image.startsWith("data:")
-                        ? currentUser?.image
-                        : `data:image/jpeg;base64,${currentUser.image}`
-                    }
-                  /> */}
+                <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-100">
+                  {currentUser?.image ? (
+                    <img
+                      alt={currentUser?.firstname || "User"}
+                      src={
+                        currentUser.image.startsWith("data:")
+                          ? currentUser.image
+                          : `data:image/jpeg;base64,${currentUser.image}`
+                      }
+                      className="object-cover w-full h-full"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-sm font-bold text-[#4DBCDB]">
+                      {currentUser?.firstname?.[0]?.toUpperCase() ?? "U"}
+                    </div>
+                  )}
                 </div>
               </div>
               <ul

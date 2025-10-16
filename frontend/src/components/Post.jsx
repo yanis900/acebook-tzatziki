@@ -3,6 +3,7 @@ import { likePost, unlikePost } from "../services/posts";
 import { LikeButton } from "./LikeButton";
 import { useState, useEffect } from "react";
 import { capitalise } from "../utils/capitalise";
+import { notify } from "../utils/notify";
 
 const LikesDisplay = ({ likesBy, likeCount, currentUserId }) => {
   const [showTooltip, setShowTooltip] = useState(false);
@@ -96,9 +97,10 @@ function Post({
   const handleLike = async () => {
     try {
       const token = localStorage.getItem("token");
-      await likePost(token, post._id);
+      const data = await likePost(token, post._id);
       setIsLiked(true);
       setLikeCount(likeCount + 1);
+      notify(data.message, false)
       if (onLikeChange) {
         await onLikeChange();
       }
@@ -110,9 +112,11 @@ function Post({
   const handleUnlike = async () => {
     try {
       const token = localStorage.getItem("token");
-      await unlikePost(token, post._id);
+      const data = await unlikePost(token, post._id);
       setIsLiked(false);
       setLikeCount(likeCount - 1);
+      notify(data.message, false)
+
       if (onLikeChange) {
         await onLikeChange();
       }

@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { notify } from "../../utils/notify";
-import { getFriends} from "../../services/users";
+import { getFriends, getMe} from "../../services/users";
+import { Navbar } from "../../components/Navbar";
 
 export function ListFriendsPage() {
   const [results, setResults] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null)
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -21,10 +23,16 @@ export function ListFriendsPage() {
         console.error(err);
         notify(err);
       });
+      getMe(token)
+      .then((data) => {
+        setCurrentUser(data.id)
+      })
   }, [navigate]);
 
   return (
     <div>
+            <Navbar currentUser={currentUser} />
+      
       <h2 className="text-2xl font-bold">My Friends</h2>
 
       {results.length === 0 ? (

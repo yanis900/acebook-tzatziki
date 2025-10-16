@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getUserByName } from "../../services/users";
+import { getMe, getUserByName } from "../../services/users";
 import { notify } from "../../utils/notify";
 import { Navbar } from "../../components/Navbar";
-// Assuming you have a service function to get the current user
-// import { getCurrentUserData } from "../../services/auth";
 
 export function SearchResultsPage() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null)
+
   const location = useLocation();
   const navigate = useNavigate();
   
@@ -52,6 +52,7 @@ export function SearchResultsPage() {
   }
 
   return (
+
     <div className="fixed inset-0"
           style={{
             background: 'linear-gradient(180deg, #FEFEF5 0%, rgba(77, 188, 219, 0.05) 100%)',
