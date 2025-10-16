@@ -36,6 +36,27 @@ export function FeedPage() {
           navigate("/login");
         });
     }
+
+    // Listen for profile updates (avatar change in navbar)
+    const handleProfileUpdated = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+        const me = await getMe(token);
+        setCurrentUser(me);
+        const data = await getPosts(token);
+        setPosts(data.posts || []);
+        if (data.token) localStorage.setItem("token", data.token);
+      } catch (err) {
+        console.error("Error refreshing feed after profile update:", err);
+      }
+    };
+
+    window.addEventListener("profileUpdated", handleProfileUpdated);
+
+    return () => {
+      window.removeEventListener("profileUpdated", handleProfileUpdated);
+    };
   }, [navigate]);
 
   const token = localStorage.getItem("token");

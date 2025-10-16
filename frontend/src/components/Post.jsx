@@ -3,7 +3,6 @@ import { likePost, unlikePost } from "../services/posts";
 import { LikeButton } from "./LikeButton";
 import { useState, useEffect } from "react";
 import { capitalise } from "../utils/capitalise";
-import { notify } from "../utils/notify";
 
 const LikesDisplay = ({ likesBy, likeCount, currentUserId }) => {
   const [showTooltip, setShowTooltip] = useState(false);
@@ -24,8 +23,8 @@ const LikesDisplay = ({ likesBy, likeCount, currentUserId }) => {
       style={{
         position: "relative",
         display: "inline-block",
-        marginLeft: "8px",
       }}
+      className="mb-2"
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
     >
@@ -97,10 +96,9 @@ function Post({
   const handleLike = async () => {
     try {
       const token = localStorage.getItem("token");
-      const data = await likePost(token, post._id);
+      await likePost(token, post._id);
       setIsLiked(true);
       setLikeCount(likeCount + 1);
-      notify(data.message, false)
       if (onLikeChange) {
         await onLikeChange();
       }
@@ -112,11 +110,9 @@ function Post({
   const handleUnlike = async () => {
     try {
       const token = localStorage.getItem("token");
-      const data = await unlikePost(token, post._id);
+      await unlikePost(token, post._id);
       setIsLiked(false);
       setLikeCount(likeCount - 1);
-      notify(data.message, false)
-
       if (onLikeChange) {
         await onLikeChange();
       }
@@ -133,8 +129,8 @@ function Post({
   );
 
   return (
-    <article key={post._id} className="mb-4 mx-auto">
-      <div className="flex flex-col p-4 border rounded-lg shadow bg-base-100">
+    <article key={post._id} className="mb-4 max-w-md mx-auto shadow-lg">
+      <div className="flex flex-col p-4 border border-[#E7F5A9] rounded-lg shadow bg-base-100">
         <div className="flex items-center gap-3">
           <div className="avatar">
             <div className="w-8 rounded-full">
