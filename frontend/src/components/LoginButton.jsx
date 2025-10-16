@@ -12,7 +12,7 @@ function LoginButton() {
     className="btn btn-outline w-1/2"
     onClick={goToLogin}
   >
-    Sign Up
+    Login
   </button>
 </div>
 }
