@@ -2,15 +2,19 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getUserByName } from "../../services/users";
 import { notify } from "../../utils/notify";
+import { Navbar } from "../../components/Navbar";
+// Assuming you have a service function to get the current user
+// import { getCurrentUserData } from "../../services/auth";
 
 export function SearchResultsPage() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
-
+  
   const token = localStorage.getItem("token");
   const query = new URLSearchParams(location.search).get("query");
+  const [currentUser] = useState(null); // Initial state for currentUser
 
   useEffect(() => {
     if (!token) {
@@ -22,7 +26,7 @@ export function SearchResultsPage() {
       const fetchResults = async () => {
         try {
           const data = await getUserByName(query);
-          setResults(data.users || []);
+          setResults(Array.isArray(data.users) ? data.users : []);
         } catch (error) {
           notify(error)
         } finally {
@@ -35,26 +39,80 @@ export function SearchResultsPage() {
     }
   }, [query, token, navigate]);
 
-  if (loading) return <p>Loading...</p>;
+  // --- Daisy UI Styling Below ---
+
+  if (loading) {
+    return (
+
+      <div className="flex justify-center items-center min-h-screen">
+        <span className="loading loading-spinner loading-lg text-[#4DBCDB]"></span> 
+        <p className="ml-2">Loading...</p>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <h2>Search Results</h2>
-      {results.length === 0 ? (
-        <p>No users found.</p>
-      ) : (
-        <div>
-          {results.map((user) => (
-            <>
-            <img width={18} height={18} style={{'borderRadius': '50%'}} src={user?.image} alt="" />
-            <a key={user._id} href={`/profile/${user.firstname}-${user.lastname}-${user._id.slice(-6)}`}>
-              {user.firstname} {user.lastname}  
-            </a>
-            </>
-          ))}
+    <div className="absolute inset-0"
+          style={{
+            background: 'linear-gradient(180deg, #FEFEF5 0%, rgba(77, 188, 219, 0.05) 100%)',
+          }} >
+      <Navbar currentUser={currentUser} />
+      
+      <div className="container mx-auto p-4 md:p-8 max-w-lg">
+        <h2 className="text-2xl font-bold"> Search Results for "{query}" </h2>
+
+        {results.length === 0 ? (
+          <div 
+            role="alert" 
+            className="alert shadow-lg bg-[#4DBCDB] text-white border-none"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-current shrink-0 w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>No users found matching your search query.</span>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {results.map((user) => (
+              <div 
+                key={user._id} 
+                className="card card-side bg-base-100 shadow-l border-2 border-[#4DBCDB] p-3 items-center" 
+              >
+                <div className="avatar mr-4">
+                  <div className="w-16 rounded-full ring ring-[#2B98BA] ring-offset-base-100 ring-offset-2">
+                    <img 
+                        //fixed 431 display issue here
+                        src={user?.image?.startsWith('data:') 
+                            ? user.image 
+                            : `data:image/jpeg;base64,${user.image}`
+                        } 
+                        alt={`${user.firstname} ${user.lastname}'s profile`} 
+                      />
+                  </div>
+                </div>
+
+                <div className="flex-1">
+                  <a 
+                    href={`/profile/${user.firstname}-${user.lastname}-${user._id.slice(-6)}`}
+                    className="text-l font-semibold link link-hover text-[#2B98BA] hover:text-[#4DBCDB]"
+                  >
+                    {user.firstname} {user.lastname}  
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        
+        <div className="mt-8 text-center">
+          <button 
+            onClick={() => navigate(-1)}
+            className="btn text-white border-2 bg-[#4DBCDB] border-[#2B98BA] shadow-lg hover:bg-[#2B98BA] hover:border-[#2B98BA]"
+          >
+            Back to Feed
+          </button>
         </div>
-      )}
-      <button onClick={() => navigate(-1)}>Back to Feed</button>
+      </div>
     </div>
   );
 }
