@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getPosts, createPost } from "../../services/posts";
 import Post from "../../components/Post";
-import ProfileButton from "../../components/ProfileButton";
-import LogoutButton from "../../components/LogoutButton";
 import { ToastContainer } from "react-toastify";
 import { PostForm } from "../../components/PostForm";
 import { notify } from "../../utils/notify";
@@ -88,8 +86,6 @@ export function FeedPage() {
           </div>
         ))}
       </div>
-      <ProfileButton />
-      <LogoutButton />
     </>
   );
 }

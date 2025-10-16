@@ -17,8 +17,6 @@ export function Navbar({ currentUser }) {
     }
   };
 
-  const goHome = () => navigate("/posts");
-
   return (
     <>
       <header className="fixed top-0 inset-x-0 z-50 w-full border-b-4 border-[#EAF0D4] bg-[#FEFEF5] shadow-md">
@@ -32,17 +30,11 @@ export function Navbar({ currentUser }) {
                 href="/posts"
                 className="flex items-center gap-2 hover:opacity-90"
               >
-                <img src={logo} alt="Tzatziki" className="h-9 w-9 shrink-0" />
+                <img src={logo} alt="Tzatziki" className="h-10 w-10 shrink-0" />
                 <span className="font-bold text-xl text-[#4DBCDB] whitespace-nowrap">
                   Tzatziki
                 </span>
               </a>
-              <button
-                onClick={goHome}
-                className="btn btn-outline btn-sm border-[#2B98BA] text-[#2B98BA] hover:bg-[#2B98BA] hover:text-white font-semibold"
-              >
-                Home
-              </button>
             </div>
 
             {/* CENTER: search (reasonable max so it never shoves the avatar) */}
@@ -64,13 +56,14 @@ export function Navbar({ currentUser }) {
                 className="btn btn-circle avatar border-2 border-[#2B98BA] bg-[#4DBCDB] hover:opacity-90"
               >
                 <div className="w-9 h-9 rounded-full overflow-hidden">
-                  <img
+                  {/* <img
                     alt={currentUser?.firstname || "User"}
                     src={
-                      currentUser?.image ||
-                      "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                      currentUser?.image.startsWith("data:")
+                        ? currentUser?.image
+                        : `data:image/jpeg;base64,${currentUser.image}`
                     }
-                  />
+                  /> */}
                 </div>
               </div>
               <ul
