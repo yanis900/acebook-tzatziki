@@ -28,6 +28,7 @@ export function ProfilePage() {
     if (!token) {
       navigate("/login");
       return;
+    }
     const loggedIn = token !== null;
     if (loggedIn) {
       getMe(token)
