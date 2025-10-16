@@ -14,7 +14,7 @@ export function SearchResultsPage() {
   
   const token = localStorage.getItem("token");
   const query = new URLSearchParams(location.search).get("query");
-  const [currentUser] = useState(null); // Initial state for currentUser
+
 
   useEffect(() => {
     if (!token) {
