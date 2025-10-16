@@ -26,7 +26,9 @@ export function SearchResultsPage() {
       const fetchResults = async () => {
         try {
           const data = await getUserByName(query);
+          const d = await getMe(token)
           setResults(Array.isArray(data.users) ? data.users : []);
+          setCurrentUser(d)
         } catch (error) {
           notify(error)
         } finally {
@@ -60,7 +62,7 @@ export function SearchResultsPage() {
       <Navbar currentUser={currentUser} />
       
       <div className="container mx-auto p-4 md:p-8 max-w-lg">
-        <h2 className="text-2xl font-bold"> Search Results for "{query}" </h2>
+        <h2 className="text-2xl font-bold"> Search Results for &quot;{query}&quot; </h2>
 
         {results.length === 0 ? (
           <div 
@@ -77,7 +79,7 @@ export function SearchResultsPage() {
             {results.map((user) => (
               <div 
                 key={user._id} 
-                className="card card-side bg-base-100 shadow-l border-2 border-[#4DBCDB] p-3 items-center" 
+                className="card card-side bg-base-100 shadow-lg border-2 border-[#4DBCDB] p-3 items-center" 
               >
                 <div className="avatar mr-4">
                   <div className="w-16 rounded-full ring ring-[#2B98BA] ring-offset-base-100 ring-offset-2">
