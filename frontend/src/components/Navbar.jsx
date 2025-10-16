@@ -4,8 +4,6 @@ import { SearchForm } from "./SearchForm";
 import LogoutButton from "./LogoutButton";
 import ProfileButton from "./ProfileButton";
 import logo from "../assets/ChatGPT clear .png";
-import FeedButton from "./FeedButton";
-import MyFriendsButton from "./MyFriendsButton";
 
 export function Navbar({ currentUser }) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -60,15 +58,22 @@ export function Navbar({ currentUser }) {
                 role="button"
                 className="btn btn-circle avatar border-2 border-[#2B98BA] bg-[#4DBCDB] hover:opacity-90"
               >
-                <div className="w-9 h-9 rounded-full overflow-hidden">
-                  {/* <img
-                    alt={currentUser?.firstname || "User"}
-                    src={
-                      currentUser?.image.startsWith("data:")
-                        ? currentUser?.image
-                        : `data:image/jpeg;base64,${currentUser.image}`
-                    }
-                  /> */}
+                <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-100">
+                  {currentUser?.image ? (
+                    <img
+                      alt={currentUser?.firstname || "User"}
+                      src={
+                        currentUser.image.startsWith("data:")
+                          ? currentUser.image
+                          : `data:image/jpeg;base64,${currentUser.image}`
+                      }
+                      className="object-cover w-full h-full"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-sm font-bold text-[#4DBCDB]">
+                      {currentUser?.firstname?.[0]?.toUpperCase() ?? "U"}
+                    </div>
+                  )}
                 </div>
               </div>
               <ul
