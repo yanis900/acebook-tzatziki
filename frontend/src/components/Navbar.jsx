@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { SearchForm } from "./SearchForm";
 import LogoutButton from "./LogoutButton";
 import logo from "../assets/ChatGPT clear .png";
-import { getMe } from "../services/users";
+import { getMe, updateImage } from "../services/users";
+import { notify } from "../utils/notify";
 import { HiUser, HiUserGroup } from "react-icons/hi";
 
 export function Navbar() {
@@ -39,6 +40,30 @@ export function Navbar() {
       window.removeEventListener('profileUpdated', handleProfileUpdate);
     };
   }, []);
+
+  const handleAvatarChange = async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+      const id = currentUser?.id || currentUser?._id;
+      const data = await updateImage(token, id, file);
+      // update local navbar state
+      setCurrentUser((prev) => ({ ...(prev || {}), image: data.image }));
+      if (data.token) localStorage.setItem("token", data.token);
+      // notify rest of app
+      window.dispatchEvent(new Event('profileUpdated'));
+      notify("Profile image updated", false);
+    } catch (err) {
+      console.error("Error updating avatar:", err);
+      notify(err.message || "Failed to update avatar");
+    } finally {
+      // reset input's value so same file can be picked again if needed
+      e.target.value = null;
+    }
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -129,6 +154,17 @@ export function Navbar() {
                   tabIndex={-1}
                   className="menu menu-sm dropdown-content rounded-box z-[60] mt-3 w-52 p-2 shadow-lg border-2 border-[#EAF0D4] bg-[#FEFEF5]"
                 >
+                  <li>
+                    <label className="flex items-center gap-2 px-2 py-1 cursor-pointer">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleAvatarChange}
+                        className="hidden"
+                      />
+                      <span className="btn btn-ghost btn-sm justify-start">Update avatar</span>
+                    </label>
+                  </li>
                   <li>
                     <LogoutButton />
                   </li>

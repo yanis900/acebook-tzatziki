@@ -6,7 +6,7 @@ import {
   getUserPosts,
   editPost,
 } from "../../services/posts";
-import { getMe, updateImage } from "../../services/users";
+import { getMe } from "../../services/users";
 import Post from "../../components/Post";
 import { ToastContainer } from "react-toastify";
 import { PostForm } from "../../components/PostForm";
@@ -63,6 +63,22 @@ export function ProfilePage() {
         navigate("/login");
       }
     })();
+
+    // Update profile when navbar notifies of a profile change (avatar updated)
+    const handleProfileUpdated = async () => {
+      try {
+        const updated = await getMe(token);
+        setCurrentUser(updated);
+      } catch (err) {
+        console.error("Error refreshing profile after update:", err);
+      }
+    };
+
+    window.addEventListener("profileUpdated", handleProfileUpdated);
+
+    return () => {
+      window.removeEventListener("profileUpdated", handleProfileUpdated);
+    };
   }, [navigate]);
 
   const token = localStorage.getItem("token");
@@ -115,28 +131,6 @@ export function ProfilePage() {
     }
   };
 
-  const handleImageUpload = async (e) => {
-    try {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      // Send the file directly
-      const data = await updateImage(token, currentUser.id, file);
-
-      // Update user state with new image
-      setCurrentUser((prev) => ({ ...prev, image: data.image }));
-      // Update token in localStorage
-      localStorage.setItem("token", data.token);
-
-      // Dispatch custom event to notify navbar of profile update
-      window.dispatchEvent(new Event('profileUpdated'));
-
-      e.target.value = null;
-      window.location.reload();
-    } catch (error) {
-      console.error("Error uploading image:", error);
-    }
-  };
 
   // const handleReload = () => {
   //   window.location.reload();
@@ -160,11 +154,7 @@ export function ProfilePage() {
         
         {currentUser && <UserData userData={currentUser} />} </div>
         <div className="space-y-4 mt-4"></div>
-        <div className="flex items-center justify-center w-full">
-        <input accept="image/*" type="file" onChange={handleImageUpload} className="file-input"/>
         
-        {/* <button onClick={handleReload} className="btn btn-sm btn-outline">Submit Image</button> */}
-        </div>
         <div className="space-y-4 mt-2"></div>
         <div className="feed w-full" role="feed">
           <div className="flex flex-col items-center text-center py-4">
