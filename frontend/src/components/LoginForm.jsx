@@ -24,7 +24,19 @@ export function LoginForm(props) {
           required
           className="input"
         />
-        <input role="submit-button" id="submit" type="submit" value="Submit" className="btn" />
+        <div className="flex justify-center mt-4">
+          <input
+            role="submit-button"
+            id="submit"
+            type="submit"
+            value="Submit"
+            className="btn btn-info w-1/2"
+            style={{backgroundColor: '#4DBCDB',
+            borderColor: '#2B98BA',
+            color: 'white'
+            }}
+          />
+        </div>
       </form>
     )
 }
