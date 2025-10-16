@@ -23,8 +23,8 @@ const LikesDisplay = ({ likesBy, likeCount, currentUserId }) => {
       style={{
         position: "relative",
         display: "inline-block",
-        marginLeft: "8px",
       }}
+      className="mb-2"
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
     >
@@ -129,8 +129,8 @@ function Post({
   );
 
   return (
-    <article key={post._id} className="mb-4 max-w-md mx-auto">
-      <div className="flex flex-col p-4 border rounded-lg shadow bg-base-100">
+    <article key={post._id} className="mb-4 max-w-md mx-auto shadow-lg">
+      <div className="flex flex-col p-4 border border-[#E7F5A9] rounded-lg shadow bg-base-100">
         <div className="flex items-center gap-3">
           <div className="avatar">
             <div className="w-8 rounded-full">

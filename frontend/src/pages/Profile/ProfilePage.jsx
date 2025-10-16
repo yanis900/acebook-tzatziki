@@ -6,11 +6,8 @@ import {
   getUserPosts,
   editPost,
 } from "../../services/posts";
-import { getMe, updateImage } from "../../services/users";
+import { getMe } from "../../services/users";
 import Post from "../../components/Post";
-import LogoutButton from "../../components/LogoutButton";
-import FeedButton from "../../components/FeedButton";
-import MyFriendsButton from "../../components/MyFriendsButton";
 import { ToastContainer } from "react-toastify";
 import { PostForm } from "../../components/PostForm";
 import { notify } from "../../utils/notify";
@@ -66,6 +63,22 @@ export function ProfilePage() {
         navigate("/login");
       }
     })();
+
+    // Update profile when navbar notifies of a profile change (avatar updated)
+    const handleProfileUpdated = async () => {
+      try {
+        const updated = await getMe(token);
+        setCurrentUser(updated);
+      } catch (err) {
+        console.error("Error refreshing profile after update:", err);
+      }
+    };
+
+    window.addEventListener("profileUpdated", handleProfileUpdated);
+
+    return () => {
+      window.removeEventListener("profileUpdated", handleProfileUpdated);
+    };
   }, [navigate]);
 
   const token = localStorage.getItem("token");
@@ -118,64 +131,54 @@ export function ProfilePage() {
     }
   };
 
-  const handleImageUpload = async (e) => {
-    try {
-      const file = e.target.files[0];
-      if (!file) return;
 
-      // Send the file directly
-      const data = await updateImage(token, currentUser.id, file);
-
-      // Update user state with new image
-      setCurrentUser((prev) => ({ ...prev, image: data.image }));
-      // Update token in localStorage
-      localStorage.setItem("token", data.token);
-      e.target.value = null;
-    } catch (error) {
-      console.error("Error uploading image:", error);
-    }
-  };
-
-  const handleReload = () => {
-    window.location.reload();
-  };
+  // const handleReload = () => {
+  //   window.location.reload();
+  // };
 
   return (
     <>
-    <Navbar currentUser={currentUser || {}} />
-      <h2 className="text-2xl font-bold">My Profile</h2>
-      <ToastContainer closeOnClick />
-      {currentUser && <UserData userData={currentUser} />}
-      <div className="flex items-center justify-center gap-4">
-
-      <input accept="image/*" type="file" onChange={handleImageUpload} className="file-input"/>
-      <button onClick={handleReload} className="btn btn-sm btn-outline">Submit Image</button>
-      </div>
-      <div className="feed" role="feed">
-        <PostForm
-          handleSubmit={handleSubmit}
-          setMessage={setMessage}
-          message={message}
+        <div
+          className="fixed inset-0 z-[-1]"
+          style={{
+            background: 'linear-gradient(180deg, #FEFEF5 0%, rgba(77, 188, 219, 0.05) 100%)',
+          }}
         />
-
-        {posts.map((post) => (
-          <div key={post._id}>
-              <Post
-                post={post}
-                currentUserId={currentUser?.id}
-                onLikeChange={async () => {
-                  const data = await getUserPosts(token, currentUser.id);
-                  setPosts(data.posts);
-                }}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-              />
-          </div>
-        ))}
-      </div>
-      <MyFriendsButton />
-      <FeedButton />
-      <LogoutButton />
-    </>
+    <div className="flex flex-col items-center"></div>
+      <Navbar currentUser={currentUser || {}} />
+      <div className="flex flex-col items-center text-center">
+      <ToastContainer closeOnClick />
+      <div className="max-w-lg mx-auto p-4 flex flex-col items-center space-y-8"></div>
+      
+        <h2 className="text-2xl font-bold">My Profile</h2>
+        
+        {currentUser && <UserData userData={currentUser} />} </div>
+        <div className="space-y-4 mt-4"></div>
+        
+        <div className="space-y-4 mt-2"></div>
+        <div className="feed w-full" role="feed">
+          <div className="flex flex-col items-center text-center py-4">
+          <PostForm
+            handleSubmit={handleSubmit}
+            setMessage={setMessage}
+            message={message}
+          />
+          <div className="space-y-4 mt-2"></div> </div>
+          {posts.map((post) => (
+            <div className="w-120 mx-auto" key={post._id}>
+                <Post
+                  post={post}
+                  currentUserId={currentUser?.id}
+                  onLikeChange={async () => {
+                    const data = await getUserPosts(token, currentUser.id);
+                    setPosts(data.posts);
+                  }}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                />
+            </div>
+          ))}
+        </div>
+    </>  
   );
 }
