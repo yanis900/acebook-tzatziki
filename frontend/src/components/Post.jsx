@@ -129,7 +129,7 @@ function Post({
   );
 
   return (
-    <article key={post._id} className="mb-4 max-w-md mx-auto">
+    <article key={post._id} className="mb-4 mx-auto">
       <div className="flex flex-col p-4 border rounded-lg shadow bg-base-100">
         <div className="flex items-center gap-3">
           <div className="avatar">

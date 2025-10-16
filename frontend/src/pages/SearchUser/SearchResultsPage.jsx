@@ -52,7 +52,7 @@ export function SearchResultsPage() {
   }
 
   return (
-    <div className="absolute inset-0"
+    <div className="fixed inset-0"
           style={{
             background: 'linear-gradient(180deg, #FEFEF5 0%, rgba(77, 188, 219, 0.05) 100%)',
           }} >

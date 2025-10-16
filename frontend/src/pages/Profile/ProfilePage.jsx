@@ -128,48 +128,74 @@ export function ProfilePage() {
       // Update token in localStorage
       localStorage.setItem("token", data.token);
       e.target.value = null;
+      window.location.reload();
     } catch (error) {
       console.error("Error uploading image:", error);
     }
   };
 
-  const handleReload = () => {
-    window.location.reload();
-  };
+  // const handleReload = () => {
+  //   window.location.reload();
+  // };
 
-  return (
+return (
     <>
-    <Navbar currentUser={currentUser || {}} />
-      <h2 className="text-2xl font-bold">My Profile</h2>
-      <ToastContainer closeOnClick />
-      {currentUser && <UserData userData={currentUser} />}
-      <div className="flex items-center justify-center gap-4">
-
-      <input accept="image/*" type="file" onChange={handleImageUpload} className="file-input"/>
-      <button onClick={handleReload} className="btn btn-sm btn-outline">Submit Image</button>
-      </div>
-      <div className="feed" role="feed">
-        <PostForm
-          handleSubmit={handleSubmit}
-          setMessage={setMessage}
-          message={message}
+        {/* Background remains outside the main content wrapper */}
+        <div
+            className="fixed inset-0 z-[-1]"
+            style={{
+                background: 'linear-gradient(180deg, #FEFEF5 0%, rgba(77, 188, 219, 0.05) 100%)',
+            }}
         />
+        <Navbar currentUser={currentUser || {}} />
+        <ToastContainer closeOnClick />
+        
+        {/* 🟢 CORRECT CONTAINER: Wraps ALL content for centering and spacing */}
+        <div className="max-w-lg mx-auto p-4 flex flex-col items-center space-y-8">
+            
+            {/* 1. Header (Centered) */}
+            <h2 className="text-2xl font-bold">My Profile</h2>
 
-        {posts.map((post) => (
-          <div key={post._id}>
-              <Post
-                post={post}
-                currentUserId={currentUser?.id}
-                onLikeChange={async () => {
-                  const data = await getUserPosts(token, currentUser.id);
-                  setPosts(data.posts);
-                }}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-              />
-          </div>
-        ))}
-      </div>
+            {/* 2. User Data (Alignment fix needed inside UserData.jsx) */}
+            {currentUser && <UserData userData={currentUser} />}
+            
+            {/* 3. File Upload Input */}
+            <div className="flex justify-center w-full"> 
+                <input 
+                    accept="image/*" 
+                    type="file" 
+                    onChange={handleImageUpload} 
+                    className="file-input w-full max-w-xs file-input-bordered" // Add file-input-bordered for correct style
+                />
+            </div>
+            
+            {/* 4. Post Form / Feed Section */}
+            <div className="feed w-full space-y-4" role="feed">
+                <PostForm
+                    handleSubmit={handleSubmit}
+                    setMessage={setMessage}
+                    message={message}
+                />
+                
+                {/* Posts */}
+                <div className="space-y-4 mt-4 w-full"> 
+                    {posts.map((post) => (
+                        <div className="w-full" key={post._id}> 
+                            <Post
+                                post={post}
+                                currentUserId={currentUser?.id}
+                                onLikeChange={async () => {
+                                    const data = await getUserPosts(token, currentUser.id);
+                                    setPosts(data.posts);
+                                }}
+                                onEdit={handleEdit}
+                                onDelete={handleDelete}
+                            />
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
     </>
-  );
+);
 }
