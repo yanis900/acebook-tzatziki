@@ -115,7 +115,7 @@ export function FriendProfilePage() {
       </div>
       {isFriend
         ? posts.map((post) => (
-            <div className="m-4 w-120 mx-auto bg-gray-200" key={post._id} >
+            <div className="m-4 w-120 mx-auto" key={post._id} >
               <Post
                 post={post}
                 currentUserId={me?.id}
