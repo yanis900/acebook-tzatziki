@@ -12,7 +12,7 @@ export function PostForm(props) {
               required
             className="input w-64 border-2"
             style={{
-              backgroundColor: '#FEFEF5',
+              backgroundColor: '#FFFFFF',
               borderColor: '#EAF0D4'
             }}
             />

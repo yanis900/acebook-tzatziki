@@ -10,7 +10,7 @@ export function SearchForm(props) {
             placeholder="Search for a friend..."
             className="input w-64 border-2"
             style={{
-              backgroundColor: '#FEFEF5',
+              backgroundColor: '#FFFFFF',
               borderColor: '#EAF0D4'
             }}
             required

@@ -61,6 +61,12 @@ export function FeedPage() {
 
   return (
     <>
+      <div className="fixed inset-0 z-[-1]"
+        style={{
+        background: 'linear-gradient(180deg, #FEFEF5 0%, rgba(77, 188, 219, 0.05) 100%)',
+        }}
+      />
+      <div className="relative min-h-screen flex flex-col items-center">
       <Navbar currentUser={currentUser} />
       <h2 className="text-2xl font-bold">My Feed</h2>
       <ToastContainer closeOnClick />
@@ -70,9 +76,10 @@ export function FeedPage() {
           setMessage={setMessage}
           message={message}
         />
+        </div>
 
         {posts.map((post) => (
-          <div key={post._id}>
+          <div className="m-4 w-120 mx-auto bg-gray-120" key={post._id}>
             <Post
               post={post}
               currentUserId={currentUser?.id}

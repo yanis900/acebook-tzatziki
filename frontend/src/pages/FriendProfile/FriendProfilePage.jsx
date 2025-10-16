@@ -96,11 +96,11 @@ export function FriendProfilePage() {
 
   return (
     <>
-      <div className="absolute inset-0 z-[-1]"
+      <div className="fixed inset-0 z-[-1]"
           style={{
             background: 'linear-gradient(180deg, #FEFEF5 0%, rgba(77, 188, 219, 0.05) 100%)',
           }}
-    />
+      />
     <div className="relative min-h-screen flex flex-col items-center">
       <Navbar/>
       <main className="container max-w-4xl px-4 w-full">
