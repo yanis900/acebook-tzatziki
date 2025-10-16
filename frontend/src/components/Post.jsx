@@ -1,6 +1,6 @@
 import { getTimeDifference } from "../utils/date";
 import { likePost, unlikePost } from "../services/posts";
-import { LikeButton } from "./LikeButton";
+import { LikeButton } from "./likeButton";
 import { useState, useEffect } from "react";
 
 const LikesDisplay = ({ likesBy, likeCount, currentUserId }) => {
@@ -9,15 +9,21 @@ const LikesDisplay = ({ likesBy, likeCount, currentUserId }) => {
   if (likeCount === 0) return null;
 
   // Sort so current user appears first
-  const sortedLikesBy = likesBy ? [...likesBy].sort((a, b) => {
-    if (a._id === currentUserId) return -1;
-    if (b._id === currentUserId) return 1;
-    return 0;
-  }) : [];
+  const sortedLikesBy = likesBy
+    ? [...likesBy].sort((a, b) => {
+        if (a._id === currentUserId) return -1;
+        if (b._id === currentUserId) return 1;
+        return 0;
+      })
+    : [];
 
   return (
     <div
-      style={{ position: "relative", display: "inline-block", marginLeft: "8px" }}
+      style={{
+        position: "relative",
+        display: "inline-block",
+        marginLeft: "8px",
+      }}
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
     >
@@ -40,7 +46,7 @@ const LikesDisplay = ({ likesBy, likeCount, currentUserId }) => {
             boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
             zIndex: 1000,
             whiteSpace: "nowrap",
-            fontSize: "14px"
+            fontSize: "14px",
           }}
         >
           {sortedLikesBy.map((user, index) => (
@@ -58,13 +64,15 @@ const LikesDisplay = ({ likesBy, likeCount, currentUserId }) => {
 
 function Post({ post, currentUserId, onLikeChange }) {
   const [isLiked, setIsLiked] = useState(
-    post.likesBy?.some(user => user._id === currentUserId) || false
+    post.likesBy?.some((user) => user._id === currentUserId) || false
   );
   const [likeCount, setLikeCount] = useState(post.likes || 0);
 
   // Update state when post changes (after refresh)
   useEffect(() => {
-    setIsLiked(post.likesBy?.some(user => user._id === currentUserId) || false);
+    setIsLiked(
+      post.likesBy?.some((user) => user._id === currentUserId) || false
+    );
     setLikeCount(post.likes || 0);
   }, [post, currentUserId]);
 
@@ -112,7 +120,11 @@ function Post({ post, currentUserId, onLikeChange }) {
         handleLike={handleLike}
         handleUnlike={handleUnlike}
       />
-      <LikesDisplay likesBy={post.likesBy} likeCount={likeCount} currentUserId={currentUserId} />
+      <LikesDisplay
+        likesBy={post.likesBy}
+        likeCount={likeCount}
+        currentUserId={currentUserId}
+      />
     </article>
   );
 }

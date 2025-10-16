@@ -10,7 +10,7 @@ export function SearchResultsPage() {
   const navigate = useNavigate();
 
   const token = localStorage.getItem("token");
-  const query = new URLSearchParams(location.search).get("name");
+  const query = new URLSearchParams(location.search).get("query");
 
   useEffect(() => {
     if (!token) {

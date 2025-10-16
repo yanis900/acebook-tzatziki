@@ -7,6 +7,7 @@ import LoginButton from "../../components/LoginButton";
 import { notify } from "../../utils/notify";
 import { SignupForm } from "../../components/SignupForm";
 import { validatePassword } from "../../utils/password";
+import { PublicNavbar } from "../../components/PublicNavbar";
 
 export function SignupPage() {
   const [firstname, setFirstname] = useState("");
@@ -61,23 +62,88 @@ export function SignupPage() {
 
   return (
     <>
+      <PublicNavbar />
       <ToastContainer closeOnClick />
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="bg-base-200 border-base-300 rounded-box w-full max-w-xs border p-4">
-          <SignupForm
-            handleSubmit={handleSubmit}
-            handleFirstNameChange={handleFirstNameChange}
-            handleLastNameChange={handleLastNameChange}
-            handleEmailChange={handleEmailChange}
-            handlePasswordChange={handlePasswordChange}
-            handleConfirmPasswordChange={handleConfirmPasswordChange}
-            firstname={firstname}
-            lastname={lastname}
-            email={email}
-            password={password}
-            confirmPassword={confirmPassword}
-          />
-          <LoginButton />
+      <div
+        className="flex justify-center items-center min-h-screen relative overflow-hidden w-full px-4"
+        style={{
+          paddingTop: '6rem',
+          backgroundColor: '#FEFEF5',
+          marginLeft: 'calc(-50vw + 50%)',
+          marginRight: 'calc(-50vw + 50%)',
+          width: '100vw',
+          maxWidth: '100vw',
+        }}
+      >
+        {/* Subtle gradient overlay - 60% primary */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: 'linear-gradient(180deg, #FEFEF5 0%, rgba(77, 188, 219, 0.05) 100%)',
+          }}
+        />
+
+        {/* Modern decorative shapes - 30% secondary */}
+        <div
+          className="absolute -right-20 top-1/4 w-80 h-80 rounded-full opacity-20 blur-3xl"
+          style={{ backgroundColor: '#4DBCDB' }}
+        />
+        <div
+          className="absolute -left-20 bottom-1/4 w-96 h-96 rounded-full opacity-20 blur-3xl"
+          style={{ backgroundColor: '#2B98BA' }}
+        />
+
+        <div className="relative z-10 w-full max-w-md">
+          {/* Clean, minimal card - Facebook style */}
+          <div
+            className="rounded-lg p-8 shadow-lg"
+            style={{
+              backgroundColor: '#FFFFFF',
+              border: '1px solid #dddfe2',
+            }}
+          >
+            {/* Compact header */}
+            <div className="text-center mb-6">
+              <h2
+                className="text-3xl font-semibold mb-2"
+                style={{ color: '#4DBCDB' }}
+              >
+                Sign Up
+              </h2>
+              <p className="text-gray-600 text-sm">It's quick and easy.</p>
+            </div>
+
+            <SignupForm
+              handleSubmit={handleSubmit}
+              handleFirstNameChange={handleFirstNameChange}
+              handleLastNameChange={handleLastNameChange}
+              handleEmailChange={handleEmailChange}
+              handlePasswordChange={handlePasswordChange}
+              handleConfirmPasswordChange={handleConfirmPasswordChange}
+              firstname={firstname}
+              lastname={lastname}
+              email={email}
+              password={password}
+              confirmPassword={confirmPassword}
+            />
+
+            {/* Divider */}
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t" style={{ borderColor: '#dddfe2' }}></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">or</span>
+              </div>
+            </div>
+
+            <LoginButton />
+          </div>
+
+          {/* Footer text like Facebook */}
+          <p className="text-center text-sm text-gray-600 mt-6">
+            Connect with friends and the world around you on Tzatziki.
+          </p>
         </div>
       </div>
     </>

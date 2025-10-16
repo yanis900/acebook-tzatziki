@@ -6,14 +6,13 @@ import ProfileButton from "../../components/ProfileButton";
 import LogoutButton from "../../components/LogoutButton";
 import { ToastContainer } from "react-toastify";
 import { PostForm } from "../../components/PostForm";
-import { SearchForm } from "../../components/SearchForm";
 import { notify } from "../../utils/notify";
 import { getMe } from "../../services/users";
+import { Navbar } from "../../components/Navbar";
 
 export function FeedPage() {
   const [posts, setPosts] = useState([]);
   const [message, setMessage] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
 
@@ -62,24 +61,12 @@ export function FeedPage() {
     }
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/search?name=${encodeURIComponent(searchQuery)}`);
-    }
-  };
-
   return (
     <>
+      <Navbar currentUser={currentUser} />
       <h2>Feed Page</h2>
       <ToastContainer closeOnClick />
       <div className="feed" role="feed">
-        <SearchForm
-          handleSearch={handleSearch}
-          setSearchQuery={setSearchQuery}
-          searchQuery={searchQuery}
-        />
-
         <PostForm
           handleSubmit={handleSubmit}
           setMessage={setMessage}
