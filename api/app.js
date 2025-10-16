@@ -12,10 +12,17 @@ const app = express();
 // Allow requests from any client
 // docs: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
 // docs: https://expressjs.com/en/resources/middleware/cors.html
-app.use(cors());
+app.use(cors({
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
+}));
+app.options("*", cors());
+
 
 // Parse JSON request bodies, made available on `req.body`
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "5mb" }));
+app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
 
 // API Routes
 app.use("/users", usersRouter);

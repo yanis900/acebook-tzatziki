@@ -1,3 +1,4 @@
+const { generateToken } = require("../lib/token");
 const User = require("../models/user");
 
 async function getUser(req, res) {
@@ -51,19 +52,64 @@ async function create(req, res) {
     });
 }
 
+async function updateImage(req, res) {
+  try {
+    const myId = req.body.myId;
+    console.log(myId);
+    
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    // Convert uploaded file to base64
+    const base64 = req.file.buffer.toString("base64");
+
+    const user = await User.findByIdAndUpdate(
+      myId,
+      { image: base64 },
+      { new: true } // return updated user
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const newToken = generateToken(user._id);
+    res.status(200).json({ message: "Image Updated", image: user.image, token: newToken });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
+async function getFriends(req, res) {
+  const myId = req.user_id;
+
+  if (!myId) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
+
+  try {
+    const user = await User.findOne({ _id: myId }); 
+    if (!user) {
+      console.log("User not found with ID:", myId);
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const friends = await Promise.all(
+      user.friends.map((id) => User.findById(id).select("-password"))
+    );
+    res.status(200).json({ message: "OK", friends: friends });
+  } catch (err) {
+    console.error("Error in getFriends:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
 async function friendUser(req, res) {
   const myId = req.body.myId;
   const otherId = req.body.otherId;
-
-  // if otherId in my friends
-//   const isFriend = User.find({ id: myId, friends: { $elemMatch: { otherId } } });
-// isFriend.then((data) => {
-//   console.log('data', data)
-//   if (data.length === 0) {
-//     return
-//   }
-// })
-  const user = User.updateOne({ _id: myId }, { $push: { friends: otherId } });
+  const user = User.updateOne({ _id: myId }, { $set: { friends: otherId } });
   const otherUser = User.updateOne(
     { _id: otherId },
     { $push: { friends: myId } }
@@ -156,6 +202,8 @@ const UsersController = {
   getUserBySlug: getUserBySlug,
   friendUser: friendUser,
   unFriendUser: unFriendUser,
+  updateImage: updateImage,
+  getFriends: getFriends,
 };
 
 module.exports = UsersController;

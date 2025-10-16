@@ -3,7 +3,7 @@ const { generateToken } = require("../lib/token");
 
 async function getAllPosts(req, res) {
   const posts = await Post.find()
-    .populate("user", "_id image").populate('likesBy', 'firstname lastname')
+    .populate("user", "_id image firstname lastname").populate('likesBy', 'firstname lastname')
     .sort({ date: -1 })
     .exec();
   console.log(posts);
@@ -18,10 +18,25 @@ async function getUserPosts(req, res) {
   }
 
   const posts = await Post.find({ user: userId })
-    .populate("user", "_id image").populate('likesBy', 'firstname lastname')
+    .populate("user", "_id image firstname lastname").populate('likesBy', 'firstname lastname')
     .sort({ date: -1 })
     .exec();
   const token = generateToken(userId);
+  res.status(200).json({ posts: posts, token: token });
+}
+
+async function getFriendPosts(req, res) {
+  const myId = req.user_id;
+  const userId = req.params.id;
+  if (!userId) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
+
+  const posts = await Post.find({ user: userId })
+    .populate("user", "_id image firstname lastname").populate('likesBy', 'firstname lastname')
+    .sort({ date: -1 })
+    .exec();
+  const token = generateToken(myId);
   res.status(200).json({ posts: posts, token: token });
 }
 
@@ -119,6 +134,7 @@ const PostsController = {
   likePost: likePost,
   unlikePost: unlikePost,
   editPost: editPost,
+  getFriendPosts: getFriendPosts,
 };
 
 module.exports = PostsController;

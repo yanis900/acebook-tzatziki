@@ -6,14 +6,16 @@ import {
   getUserPosts,
   editPost,
 } from "../../services/posts";
-import { getMe } from "../../services/users";
+import { getMe, updateImage } from "../../services/users";
 import Post from "../../components/Post";
 import LogoutButton from "../../components/LogoutButton";
 import FeedButton from "../../components/FeedButton";
+import MyFriendsButton from "../../components/MyFriendsButton";
 import { ToastContainer } from "react-toastify";
 import { PostForm } from "../../components/PostForm";
 import { notify } from "../../utils/notify";
 import { Navbar } from "../../components/Navbar";
+import { UserData } from "../../components/UserData";
 
 export function ProfilePage() {
   const [posts, setPosts] = useState([]);
@@ -26,6 +28,26 @@ export function ProfilePage() {
     if (!token) {
       navigate("/login");
       return;
+    const loggedIn = token !== null;
+    if (loggedIn) {
+      getMe(token)
+        .then((data) => {
+          console.log(data);
+          setUserData(data);
+        })
+        .catch((err) => {
+          console.error("Error fetching verified user info", err);
+        });
+      getUserPosts(token)
+        .then((data) => {
+          console.log("data", data);
+          setPosts(data.posts);
+          localStorage.setItem("token", data.token);
+        })
+        .catch((err) => {
+          console.error(err);
+          navigate("/login");
+        });
     }
 
     (async () => {
@@ -95,29 +117,39 @@ export function ProfilePage() {
     }
   };
 
+  const handleImageUpload = async (e) => {
+    try {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      // Send the file directly
+      const data = await updateImage(token, userData.id, file);
+
+      // Update user state with new image
+      setUserData((prev) => ({ ...prev, image: data.image }));
+      // Update token in localStorage
+      localStorage.setItem("token", data.token);
+      e.target.value = null;
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+  };
+
+  const handleReload = () => {
+    window.location.reload();
+  };
+
   return (
     <>
-      {/* ✅ Now passes the same prop name as FeedPage */}
-      <Navbar currentUser={currentUser || {}} />
-
-      <h2>Profile Page</h2>
+    <Navbar currentUser={currentUser || {}} />
+      <h2 className="text-2xl font-bold">My Profile</h2>
       <ToastContainer closeOnClick />
+      {userData && <UserData userData={userData} />}
+      <div className="flex items-center justify-center gap-4">
 
-      {currentUser && (
-        <div className="mb-4">
-          <img
-            width={100}
-            height={100}
-            className="rounded-full"
-            src={currentUser.image}
-            alt={currentUser.firstname}
-          />
-          <p>First Name: {currentUser.firstname}</p>
-          <p>Last Name: {currentUser.lastname}</p>
-          <p>Email: {currentUser.email}</p>
-        </div>
-      )}
-
+      <input accept="image/*" type="file" onChange={handleImageUpload} className="file-input"/>
+      <button onClick={handleReload} className="btn btn-sm btn-outline">Submit Image</button>
+      </div>
       <div className="feed" role="feed">
         <PostForm
           handleSubmit={handleSubmit}
@@ -127,27 +159,20 @@ export function ProfilePage() {
 
         {posts.map((post) => (
           <div key={post._id}>
-            <Post
-              post={post}
-              currentUserId={currentUser?.id || currentUser?._id}
-              onLikeChange={async () => {
-                const data = await getUserPosts(token, currentUser.id);
-                setPosts(data.posts || []);
-              }}
-            />
-            <button
-              onClick={() => {
-                const newMessage = prompt("Edit your post:", post.message);
-                if (newMessage !== null) handleEdit(post._id, newMessage);
-              }}
-            >
-              Edit
-            </button>
-            <button onClick={() => handleDelete(post._id)}>Delete</button>
+              <Post
+                post={post}
+                currentUserId={userData?.id}
+                onLikeChange={async () => {
+                  const data = await getUserPosts(token, userData.id);
+                  setPosts(data.posts);
+                }}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+              />
           </div>
         ))}
       </div>
-
+      <MyFriendsButton />
       <FeedButton />
       <LogoutButton />
     </>

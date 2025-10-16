@@ -1,7 +1,7 @@
 export function FriendButton(props) {
   return (
     <>
-    {!props.isFriend ? (<button onClick={props.handleAddFriend}>Add Friend</button>) : (<button onClick={props.handleRemoveFriend}>Remove Friend</button>)}
+    {!props.isFriend ? (<button className="btn" onClick={props.handleAddFriend}>Add Friend</button>) : (<button className="btn" onClick={props.handleRemoveFriend}>Remove Friend</button>)}
     </>
   )
 }

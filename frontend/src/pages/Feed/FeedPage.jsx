@@ -64,7 +64,7 @@ export function FeedPage() {
   return (
     <>
       <Navbar currentUser={currentUser} />
-      <h2>Feed Page</h2>
+      <h2 className="text-2xl font-bold">My Feed</h2>
       <ToastContainer closeOnClick />
       <div className="feed" role="feed">
         <PostForm
@@ -83,6 +83,7 @@ export function FeedPage() {
                 const data = await getPosts(token);
                 setPosts(data.posts);
               }}
+              allowOwnerActions={false}
             />
           </div>
         ))}

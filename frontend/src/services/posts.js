@@ -37,6 +37,25 @@ export async function getUserPosts(token) {
   return data;
 }
 
+export async function getFriendPosts(token, userId) {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  
+  const response = await fetch(`${BACKEND_URL}/posts/${userId}`, requestOptions);
+
+  if (response.status !== 200) {
+    throw new Error("Unable to fetch posts");
+  }
+
+  const data = await response.json();
+  return data;
+
+}
+
 export async function createPost(token, message) {
   const requestOptions = {
     method: "POST",
@@ -112,6 +131,10 @@ export async function unlikePost(token, postId) {
   if (response.status !== 201) {
     throw new Error("Unable to unlike post");
   }
+
+  const data = await response.json();
+  console.log(data);
+  return data;
 }
 
 export async function editPost(token, postId, message) {

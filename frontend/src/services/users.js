@@ -63,6 +63,25 @@ export async function getUserBySlug(token, slug) {
   return data;
 }
 
+export async function getFriends(token) {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await fetch(`${BACKEND_URL}/users/friends`, requestOptions);
+
+  if (response.status !== 200) {
+    throw new Error("Unable to fetch friends");
+  }
+
+  const data = await response.json();
+  console.log(data)
+  return data;
+}
+
 export async function friendUser(token, myId, otherId) {
   const requestOptions = {
     method: "POST",
@@ -96,6 +115,50 @@ export async function unFriendUser(token, myId, otherId) {
 
   if (response.status !== 201) {
     throw new Error("Unable to unfriend user");
+  }
+
+  const data = await response.json();
+  console.log(data);
+  return data;
+}
+
+// export async function updateImage(token, myId, base64) {
+//   const requestOptions = {
+//     method: "PUT",
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({ myId: myId, base64: base64 }),
+//   };
+//   const response = await fetch(`${BACKEND_URL}/users/image`, requestOptions);
+
+//   if (!response.ok) {
+//     throw new Error("Unable to update user image");
+//   }
+
+//   const data = await response.json();
+//   console.log(data);
+//   return data;
+// }
+
+export async function updateImage(token, myId, file) {
+  const formData = new FormData();
+  formData.append("myId", myId);
+  formData.append("image", file); // file from <input type="file">
+
+  const response = await fetch(`${BACKEND_URL}/users/image`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      // Do NOT set Content-Type for FormData
+    },
+    body: formData,
+  });
+  console.log("TOKEN", token);
+
+  if (!response.ok) {
+    throw new Error("Unable to update user image");
   }
 
   const data = await response.json();
