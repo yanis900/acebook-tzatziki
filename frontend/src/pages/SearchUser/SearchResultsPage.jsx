@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getUserByName } from "../../services/users";
+import { getMe, getUserByName } from "../../services/users";
 import { notify } from "../../utils/notify";
+import { Navbar } from "../../components/Navbar";
 
 export function SearchResultsPage() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null)
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -22,7 +25,9 @@ export function SearchResultsPage() {
       const fetchResults = async () => {
         try {
           const data = await getUserByName(query);
+          const d = await getMe(token)
           setResults(data.users || []);
+          setCurrentUser(d.id)
         } catch (error) {
           notify(error)
         } finally {
@@ -39,6 +44,7 @@ export function SearchResultsPage() {
 
   return (
     <div>
+      <Navbar currentUser={currentUser}/>
       <h2>Search Results</h2>
       {results.length === 0 ? (
         <p>No users found.</p>

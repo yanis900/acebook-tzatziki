@@ -4,6 +4,8 @@ import { SearchForm } from "./SearchForm";
 import LogoutButton from "./LogoutButton";
 import ProfileButton from "./ProfileButton";
 import logo from "../assets/ChatGPT clear .png";
+import FeedButton from "./FeedButton";
+import MyFriendsButton from "./MyFriendsButton";
 
 export function Navbar({ currentUser }) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -47,6 +49,9 @@ export function Navbar({ currentUser }) {
                 />
               </div>
             </div>
+
+            {/* <MyFriendsButton /> */}
+            {/* <FeedButton /> */}
 
             {/* RIGHT: avatar dropdown (slightly inset) */}
             <div className="dropdown dropdown-end pr-8 lg:pr-12 xl:pr-16">
