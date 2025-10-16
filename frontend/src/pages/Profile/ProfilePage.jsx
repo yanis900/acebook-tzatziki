@@ -14,22 +14,27 @@ import MyFriendsButton from "../../components/MyFriendsButton";
 import { ToastContainer } from "react-toastify";
 import { PostForm } from "../../components/PostForm";
 import { notify } from "../../utils/notify";
+import { Navbar } from "../../components/Navbar";
 import { UserData } from "../../components/UserData";
 
 export function ProfilePage() {
   const [posts, setPosts] = useState([]);
   const [message, setMessage] = useState("");
-  const [userData, setUserData] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
     const loggedIn = token !== null;
     if (loggedIn) {
       getMe(token)
         .then((data) => {
           console.log(data);
-          setUserData(data);
+          setCurrentUser(data);
         })
         .catch((err) => {
           console.error("Error fetching verified user info", err);
@@ -45,57 +50,70 @@ export function ProfilePage() {
           navigate("/login");
         });
     }
+
+    (async () => {
+      try {
+        // Fetch user info
+        const me = await getMe(token);
+        setCurrentUser(me);
+
+        // Fetch that user's posts
+        const userPosts = await getUserPosts(token, me.id || me._id);
+        setPosts(userPosts.posts || []);
+        if (userPosts.token) localStorage.setItem("token", userPosts.token);
+      } catch (err) {
+        console.error("Error fetching profile data:", err);
+        navigate("/login");
+      }
+    })();
   }, [navigate]);
 
   const token = localStorage.getItem("token");
-  if (!token) {
-    navigate("/login");
-    return;
-  }
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!token || !currentUser?.id) return;
+
     try {
-      e.preventDefault();
-      const d = await createPost(token, message);
-      const data = await getUserPosts(token, userData.id);
-      setPosts(data.posts);
-      notify(d.message, false);
-      localStorage.setItem("token", data.token);
+      const created = await createPost(token, message);
+      const updated = await getUserPosts(token, currentUser.id);
+      setPosts(updated.posts || []);
+      notify(created.message || "Post created!", false);
+      if (updated.token) localStorage.setItem("token", updated.token);
+      setMessage("");
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      notify(error.message || "Failed to create post", true);
     }
   };
 
   const handleDelete = async (postId) => {
+    if (!token || !currentUser?.id) return;
     try {
-      const confirmDelete = window.confirm(
-        "Are you sure you want to delete this post?"
-      );
-      if (!confirmDelete) {
-        return; // User clicked "Cancel", so stop here
-      }
+      const confirmDelete = window.confirm("Delete this post?");
+      if (!confirmDelete) return;
 
-      const token = localStorage.getItem("token");
       await deletePost(token, postId);
-      const updatedPosts = await getUserPosts(token, userData.id);
-      setPosts(updatedPosts.posts);
-      localStorage.setItem("token", updatedPosts.token);
+      const updated = await getUserPosts(token, currentUser.id);
+      setPosts(updated.posts || []);
+      if (updated.token) localStorage.setItem("token", updated.token);
       notify("Post deleted successfully!", false);
     } catch (err) {
-      notify(err);
       console.error(err);
+      notify(err.message || "Failed to delete post", true);
     }
   };
 
   const handleEdit = async (postId, newMessage) => {
+    if (!token || !currentUser?.id) return;
     try {
-      const d = await editPost(token, postId, newMessage);
-      const updatedData = await getUserPosts(token, userData.id);
-      setPosts(updatedData.posts);
-      notify(d.message, false);
-      localStorage.setItem("token", updatedData.token);
+      const res = await editPost(token, postId, newMessage);
+      const updated = await getUserPosts(token, currentUser.id);
+      setPosts(updated.posts || []);
+      notify(res.message || "Post updated!", false);
+      if (updated.token) localStorage.setItem("token", updated.token);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       notify(error.message || "Failed to edit post", true);
     }
   };
@@ -106,10 +124,10 @@ export function ProfilePage() {
       if (!file) return;
 
       // Send the file directly
-      const data = await updateImage(token, userData.id, file);
+      const data = await updateImage(token, currentUser.id, file);
 
       // Update user state with new image
-      setUserData((prev) => ({ ...prev, image: data.image }));
+      setCurrentUser((prev) => ({ ...prev, image: data.image }));
       // Update token in localStorage
       localStorage.setItem("token", data.token);
       e.target.value = null;
@@ -124,9 +142,10 @@ export function ProfilePage() {
 
   return (
     <>
+    <Navbar currentUser={currentUser || {}} />
       <h2 className="text-2xl font-bold">My Profile</h2>
       <ToastContainer closeOnClick />
-      {userData && <UserData userData={userData} />}
+      {currentUser && <UserData userData={currentUser} />}
       <div className="flex items-center justify-center gap-4">
 
       <input accept="image/*" type="file" onChange={handleImageUpload} className="file-input"/>
@@ -143,9 +162,9 @@ export function ProfilePage() {
           <div key={post._id}>
               <Post
                 post={post}
-                currentUserId={userData?.id}
+                currentUserId={currentUser?.id}
                 onLikeChange={async () => {
-                  const data = await getUserPosts(token, userData.id);
+                  const data = await getUserPosts(token, currentUser.id);
                   setPosts(data.posts);
                 }}
                 onEdit={handleEdit}
