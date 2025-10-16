@@ -127,6 +127,10 @@ export function ProfilePage() {
       setCurrentUser((prev) => ({ ...prev, image: data.image }));
       // Update token in localStorage
       localStorage.setItem("token", data.token);
+
+      // Dispatch custom event to notify navbar of profile update
+      window.dispatchEvent(new Event('profileUpdated'));
+
       e.target.value = null;
       window.location.reload();
     } catch (error) {

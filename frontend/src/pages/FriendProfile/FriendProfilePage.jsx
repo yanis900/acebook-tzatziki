@@ -109,7 +109,7 @@ export function FriendProfilePage() {
             <div key={post._id}>
               <Post
                 post={post}
-                currentUserId={userData?.id}
+                currentUserId={me?.id}
                 onLikeChange={async () => {
                   const data = await getFriendPosts(token, userData._id);
                   setPosts(data.posts);

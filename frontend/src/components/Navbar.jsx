@@ -1,13 +1,44 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { SearchForm } from "./SearchForm";
 import LogoutButton from "./LogoutButton";
-import ProfileButton from "./ProfileButton";
 import logo from "../assets/ChatGPT clear .png";
+import { getMe } from "../services/users";
+import { HiUser, HiUserGroup } from "react-icons/hi";
 
-export function Navbar({ currentUser }) {
+export function Navbar() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUser = () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        getMe(token)
+          .then((data) => {
+            setCurrentUser(data);
+          })
+          .catch((err) => {
+            console.error("Error fetching current user in navbar", err);
+          });
+      }
+    };
+
+    // Fetch user on mount
+    fetchUser();
+
+    // Listen for profile updates via custom event
+    const handleProfileUpdate = () => {
+      fetchUser();
+    };
+
+    window.addEventListener('profileUpdated', handleProfileUpdate);
+
+    return () => {
+      window.removeEventListener('profileUpdated', handleProfileUpdate);
+    };
+  }, []);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -48,51 +79,67 @@ export function Navbar({ currentUser }) {
               </div>
             </div>
 
-            {/* <MyFriendsButton /> */}
-            {/* <FeedButton /> */}
+            {/* RIGHT: Profile, Friends links and avatar dropdown */}
+            <div className="flex items-center gap-4 pr-8 lg:pr-12 xl:pr-16">
+              {/* Profile Link */}
+              <a
+                href="/profile"
+                className="flex items-center gap-1.5 font-semibold transition-colors whitespace-nowrap"
+                style={{ color: '#4DBCDB' }}
+                onMouseEnter={(e) => e.currentTarget.style.color = '#2B98BA'}
+                onMouseLeave={(e) => e.currentTarget.style.color = '#4DBCDB'}
+              >
+                <HiUser className="text-xl" />
+                <span>Profile</span>
+              </a>
 
-            {/* RIGHT: avatar dropdown (slightly inset) */}
-            <div className="dropdown dropdown-end pr-8 lg:pr-12 xl:pr-16">
-              <div
-                tabIndex={0}
-                role="button"
-                className="btn btn-circle avatar border-2 border-[#2B98BA] bg-[#4DBCDB] hover:opacity-90"
+              {/* Friends Link */}
+              <a
+                href="/myfriends"
+                className="flex items-center gap-1.5 font-semibold transition-colors whitespace-nowrap"
+                style={{ color: '#4DBCDB' }}
+                onMouseEnter={(e) => e.currentTarget.style.color = '#2B98BA'}
+                onMouseLeave={(e) => e.currentTarget.style.color = '#4DBCDB'}
               >
-                <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-100">
-                  {currentUser?.image ? (
-                    <img
-                      alt={currentUser?.firstname || "User"}
-                      src={
-                        currentUser.image.startsWith("data:")
-                          ? currentUser.image
-                          : `data:image/jpeg;base64,${currentUser.image}`
-                      }
-                      className="object-cover w-full h-full"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-sm font-bold text-[#4DBCDB]">
-                      {currentUser?.firstname?.[0]?.toUpperCase() ?? "U"}
-                    </div>
-                  )}
+                <HiUserGroup className="text-xl" />
+                <span>Friends</span>
+              </a>
+
+              {/* Avatar dropdown */}
+              <div className="dropdown dropdown-end">
+                <div
+                  tabIndex={0}
+                  role="button"
+                  className="btn btn-circle avatar border-2 border-[#2B98BA] bg-[#4DBCDB] hover:opacity-90"
+                >
+                  <div className="w-9 h-9 rounded-full overflow-hidden">
+                    {currentUser?.image && (
+                      <img
+                        alt={currentUser?.firstname || "User"}
+                        src={
+                          currentUser?.image.startsWith("data:")
+                            ? currentUser?.image
+                            : `data:image/jpeg;base64,${currentUser.image}`
+                        }
+                      />
+                    )}
+                  </div>
                 </div>
+                <ul
+                  tabIndex={-1}
+                  className="menu menu-sm dropdown-content rounded-box z-[60] mt-3 w-52 p-2 shadow-lg border-2 border-[#EAF0D4] bg-[#FEFEF5]"
+                >
+                  <li>
+                    <LogoutButton />
+                  </li>
+                </ul>
               </div>
-              <ul
-                tabIndex={-1}
-                className="menu menu-sm dropdown-content rounded-box z-[60] mt-3 w-52 p-2 shadow-lg border-2 border-[#EAF0D4] bg-[#FEFEF5]"
-              >
-                <li>
-                  <ProfileButton />
-                </li>
-                <li>
-                  <LogoutButton />
-                </li>
-              </ul>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Spacer so content isn’t hidden under the fixed bar */}
+      {/* Spacer so content isn't hidden under the fixed bar */}
       <div className="h-[64px]" />
     </>
   );
