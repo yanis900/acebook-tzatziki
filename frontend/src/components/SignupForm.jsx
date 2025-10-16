@@ -64,22 +64,28 @@ export function SignupForm(props) {
         required
         className="input"
       />
-      <div className="card-body border border-white-300 rounded-box my-2 p-4">
-        <h4 className="card-title">Password Requirements:</h4>
-        <ul className="list-disc list-inside text-xs">
-          <li>Minimum 8 characters, maximum 16 characters</li>
-          <li>At least 1 capital letter</li>
-          <li>At least 1 number</li>
-          <li>At least 1 special character</li>
-        </ul>
-      </div>
-      <input
-        role="submit-button"
-        id="submit"
-        type="submit"
-        value="Submit"
-        className="btn"
-      />
+      <div className="card-body border border-white-300 rounded-box my-2 p-4 max-w-[19.5rem] h-25">
+      <h4 className="card-title text-sm m-0.5">Password Requirements:</h4>
+      <ul className="list-disc list-outside text-xs pl-4 m-0.5 text-left">
+        <li>Minimum 8 characters, maximum 16 characters</li>
+        <li>At least 1 capital letter</li>
+        <li>At least 1 number</li>
+        <li>At least 1 special character</li>
+      </ul>
+      </div> 
+      <div className="flex justify-center mt-4">
+          <input
+            role="submit-button"
+            id="submit"
+            type="submit"
+            value="Submit"
+            className="btn btn-info w-1/2"
+            style={{backgroundColor: '#4DBCDB',
+            borderColor: '#2B98BA',
+            color: 'white'
+            }}
+          />
+        </div>
     </form>
   );
 }

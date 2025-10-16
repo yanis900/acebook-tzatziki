@@ -7,7 +7,14 @@ function LoginButton() {
     navigate("/login");
   }
 
-  return <button className="link" onClick={goToLogin}>Login</button>;
+  return <div className="flex justify-center"> 
+  <button
+    className="btn btn-outline w-1/2"
+    onClick={goToLogin}
+  >
+    Sign Up
+  </button>
+</div>
 }
 
 export default LoginButton;
