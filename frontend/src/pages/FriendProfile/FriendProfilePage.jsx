@@ -10,6 +10,7 @@ import { FriendButton } from "../../components/FollowButton";
 import Post from "../../components/Post";
 import { getFriendPosts } from "../../services/posts";
 import { UserData } from "../../components/UserData";
+import { Navbar } from "../../components/Navbar";
 
 export function FriendProfilePage() {
   const { userSlug } = useParams();
@@ -95,10 +96,18 @@ export function FriendProfilePage() {
 
   return (
     <>
-      <div>
-        <h2 className="text-2xl font-bold">{userData.firstname}&apos;s Feed</h2>
+      <div className="fixed inset-0 z-[-1]"
+          style={{
+            background: 'linear-gradient(180deg, #FEFEF5 0%, rgba(77, 188, 219, 0.05) 100%)',
+          }}
+      />
+    <div className="relative min-h-screen flex flex-col items-center">
+      <Navbar/>
+      <main className="container max-w-4xl px-4 w-full">
+      <div className="flex flex-col items-center text-center py-4">
+        <h2 className="text-2xl font-bold">{userData.firstname ? userData.firstname.charAt(0).toUpperCase() + userData.firstname.slice(1) : ''}&apos;s Feed</h2>
         {userData && <UserData userData={userData} />}
-        <FriendButton
+        <FriendButton 
           isFriend={isFriend}
           handleAddFriend={handleAddFriend}
           handleRemoveFriend={handleRemoveFriend}
@@ -106,7 +115,7 @@ export function FriendProfilePage() {
       </div>
       {isFriend
         ? posts.map((post) => (
-            <div key={post._id}>
+            <div className="m-4 w-120 mx-auto bg-gray-200" key={post._id} >
               <Post
                 post={post}
                 currentUserId={me?.id}
@@ -118,6 +127,8 @@ export function FriendProfilePage() {
             </div>
           ))
         : ""}
+      </main>
+    </div>
     </>
   );
 }
