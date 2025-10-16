@@ -1,40 +1,62 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
-
 import { HomePage } from "../../src/pages/Home/HomePage";
+import { vi } from "vitest";
 
-describe("Home Page", () => {
-  test("welcomes you to the site", () => {
-    // We need the Browser Router so that the Link elements load correctly
-    render(
-      <BrowserRouter>
-        <HomePage />
-      </BrowserRouter>
-    );
+const mockNavigate = vi.fn();
 
-    const heading = screen.getByRole("heading");
-    expect(heading.textContent).toEqual("Welcome to Acebook!");
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
+
+describe("HomePage", () => {
+  beforeEach(() => {
+    mockNavigate.mockClear();
   });
 
-  test("Displays a signup link", async () => {
+  test("renders the main heading", () => {
     render(
       <BrowserRouter>
         <HomePage />
       </BrowserRouter>
     );
 
-    const signupLink = screen.getByText("Sign Up");
-    expect(signupLink.getAttribute("href")).toEqual("/signup");
+    const heading = screen.getByRole("heading", {
+      name: /welcome to tzatziki!/i,
+    });
+
+    expect(heading).toBeDefined(); // Using Vitest's built-in matcher
   });
 
-  test("Displays a login link", async () => {
+  test("renders the Sign Up button and navigates on click", () => {
     render(
       <BrowserRouter>
         <HomePage />
       </BrowserRouter>
     );
 
-    const loginLink = screen.getByText("Log In");
-    expect(loginLink.getAttribute("href")).toEqual("/login");
+    const signUpButton = screen.getByRole("button", { name: /sign up/i });
+    expect(signUpButton).toBeDefined();
+
+    fireEvent.click(signUpButton);
+    expect(mockNavigate).toHaveBeenCalledWith("/signup");
+  });
+
+  test("renders the Log In button and navigates on click", () => {
+    render(
+      <BrowserRouter>
+        <HomePage />
+      </BrowserRouter>
+    );
+
+    const loginButton = screen.getByRole("button", { name: /log in/i });
+    expect(loginButton).toBeDefined();
+
+    fireEvent.click(loginButton);
+    expect(mockNavigate).toHaveBeenCalledWith("/login");
   });
 });

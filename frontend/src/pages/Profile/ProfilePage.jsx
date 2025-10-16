@@ -34,7 +34,7 @@ export function ProfilePage() {
       getMe(token)
         .then((data) => {
           console.log(data);
-          setUserData(data);
+          setCurrentUser(data);
         })
         .catch((err) => {
           console.error("Error fetching verified user info", err);
@@ -124,10 +124,10 @@ export function ProfilePage() {
       if (!file) return;
 
       // Send the file directly
-      const data = await updateImage(token, userData.id, file);
+      const data = await updateImage(token, currentUser.id, file);
 
       // Update user state with new image
-      setUserData((prev) => ({ ...prev, image: data.image }));
+      setCurrentUser((prev) => ({ ...prev, image: data.image }));
       // Update token in localStorage
       localStorage.setItem("token", data.token);
       e.target.value = null;
@@ -145,7 +145,7 @@ export function ProfilePage() {
     <Navbar currentUser={currentUser || {}} />
       <h2 className="text-2xl font-bold">My Profile</h2>
       <ToastContainer closeOnClick />
-      {userData && <UserData userData={userData} />}
+      {currentUser && <UserData userData={currentUser} />}
       <div className="flex items-center justify-center gap-4">
 
       <input accept="image/*" type="file" onChange={handleImageUpload} className="file-input"/>
@@ -162,9 +162,9 @@ export function ProfilePage() {
           <div key={post._id}>
               <Post
                 post={post}
-                currentUserId={userData?.id}
+                currentUserId={currentUser?.id}
                 onLikeChange={async () => {
-                  const data = await getUserPosts(token, userData.id);
+                  const data = await getUserPosts(token, currentUser.id);
                   setPosts(data.posts);
                 }}
                 onEdit={handleEdit}
