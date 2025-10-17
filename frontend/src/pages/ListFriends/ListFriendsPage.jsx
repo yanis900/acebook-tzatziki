@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { notify } from "../../utils/notify";
-import { getFriends, getMe} from "../../services/users";
+import { getFriends, getMe } from "../../services/users";
 import { Navbar } from "../../components/Navbar";
 import { capitalise } from "../../utils/capitalise";
 
@@ -48,7 +48,8 @@ export function ListFriendsPage() {
     <div
       className="fixed inset-0"
       style={{
-        background: 'linear-gradient(180deg, #FEFEF5 0%, rgba(77, 188, 219, 0.08) 50%, #FEFEF5 100%)',
+        background:
+          "linear-gradient(180deg, #FEFEF5 0%, rgba(77, 188, 219, 0.08) 50%, #FEFEF5 100%)",
       }}
     >
       {/* Modern mesh gradient overlay */}
@@ -61,15 +62,24 @@ export function ListFriendsPage() {
             radial-gradient(at 40% 70%, rgba(77, 188, 219, 0.2) 0px, transparent 50%),
             radial-gradient(at 90% 80%, rgba(231, 245, 169, 0.3) 0px, transparent 50%)
           `,
+          zIndex: -100,
         }}
       />
       <Navbar currentUser={currentUser} />
 
       <div className="container mx-auto p-4 md:p-8 max-w-lg">
-        <h2 className="text-3xl font-semibold mb-2" style={{ color: '#4DBCDB' }}>My Friends</h2>
+        <h2
+          className="text-3xl font-semibold mb-2"
+          style={{ color: "#4DBCDB" }}
+        >
+          My Friends
+        </h2>
 
         {results.length === 0 ? (
-          <div role="alert" className="alert shadow-lg bg-[#4DBCDB] text-white border-none">
+          <div
+            role="alert"
+            className="alert shadow-lg bg-[#4DBCDB] text-white border-none"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -96,7 +106,11 @@ export function ListFriendsPage() {
                   <div className="w-16 rounded-full ring ring-[#2B98BA] ring-offset-base-100 ring-offset-2">
                     <img
                       // fixed 431 display issue here
-                      src={user?.image?.startsWith("data:") ? user.image : `data:image/jpeg;base64,${user.image}`}
+                      src={
+                        user?.image?.startsWith("data:")
+                          ? user.image
+                          : `data:image/jpeg;base64,${user.image}`
+                      }
                       alt={`${user.firstname} ${user.lastname}'s profile`}
                     />
                   </div>
@@ -118,7 +132,7 @@ export function ListFriendsPage() {
 
         <div className="mt-8 text-center">
           <button
-            onClick={() => navigate('/posts')}
+            onClick={() => navigate("/posts")}
             className="btn text-white border-2 bg-[#4DBCDB] border-[#2B98BA] shadow-lg hover:bg-[#2B98BA] hover:border-[#2B98BA]"
           >
             Back to Feed

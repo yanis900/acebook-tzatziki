@@ -70,6 +70,7 @@ export function SearchResultsPage() {
             radial-gradient(at 40% 70%, rgba(77, 188, 219, 0.2) 0px, transparent 50%),
             radial-gradient(at 90% 80%, rgba(231, 245, 169, 0.3) 0px, transparent 50%)
           `,
+          zIndex: -100
         }}
       />
       <Navbar currentUser={currentUser} />
