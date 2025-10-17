@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { getMe, getUserByName } from "../../services/users";
 import { notify } from "../../utils/notify";
 import { Navbar } from "../../components/Navbar";
+import { capitalise } from "../../utils/capitalise";
 
 export function SearchResultsPage() {
   const [results, setResults] = useState([]);
@@ -112,7 +113,7 @@ export function SearchResultsPage() {
                     className="text-xl font-semibold link link-hover text-[#2B98BA] hover:text-[#4DBCDB]"
                     style={{color: "#2B98BA"}}
                   >
-                    {user.firstname} {user.lastname}  
+                    {capitalise(user.firstname)} {capitalise(user.lastname)}  
                   </a>
                 </div>
               </div>
