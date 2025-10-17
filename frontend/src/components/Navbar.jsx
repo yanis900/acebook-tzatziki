@@ -155,14 +155,14 @@ export function Navbar() {
                   className="menu menu-sm dropdown-content rounded-box z-[60] mt-3 w-52 p-2 shadow-lg border-2 border-[#EAF0D4] bg-[#FEFEF5]"
                 >
                   <li>
-                    <label className="flex items-center gap-2 px-2 py-1 cursor-pointer">
+                    <label className="btn btn-ghost w-full justify-start cursor-pointer">
                       <input
                         type="file"
                         accept="image/*"
                         onChange={handleAvatarChange}
                         className="hidden"
                       />
-                      <span className="btn btn-ghost btn-sm justify-start">Update avatar</span>
+                      Update avatar
                     </label>
                   </li>
                   <li>

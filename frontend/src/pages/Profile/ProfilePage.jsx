@@ -141,16 +141,29 @@ export function ProfilePage() {
         <div
           className="fixed inset-0 z-[-1]"
           style={{
-            background: 'linear-gradient(180deg, #FEFEF5 0%, rgba(77, 188, 219, 0.05) 100%)',
+            background: 'linear-gradient(180deg, #FEFEF5 0%, rgba(77, 188, 219, 0.08) 50%, #FEFEF5 100%)',
           }}
-        />
+        >
+          {/* Modern mesh gradient overlay */}
+          <div
+            className="absolute inset-0 opacity-30"
+            style={{
+              backgroundImage: `
+                radial-gradient(at 20% 30%, rgba(77, 188, 219, 0.3) 0px, transparent 50%),
+                radial-gradient(at 80% 20%, rgba(231, 245, 169, 0.4) 0px, transparent 50%),
+                radial-gradient(at 40% 70%, rgba(77, 188, 219, 0.2) 0px, transparent 50%),
+                radial-gradient(at 90% 80%, rgba(231, 245, 169, 0.3) 0px, transparent 50%)
+              `,
+            }}
+          />
+        </div>
     <div className="flex flex-col items-center"></div>
       <Navbar currentUser={currentUser || {}} />
       <div className="flex flex-col items-center text-center">
       <ToastContainer closeOnClick />
       <div className="max-w-lg mx-auto p-4 flex flex-col items-center space-y-8"></div>
       
-        <h2 className="text-2xl font-bold">My Profile</h2>
+        <h2 className="text-3xl font-semibold mb-2" style={{ color: '#4DBCDB' }}>My Profile</h2>
         
         {currentUser && <UserData userData={currentUser} />} </div>
         <div className="space-y-4 mt-4"></div>
