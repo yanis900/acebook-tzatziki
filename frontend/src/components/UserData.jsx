@@ -17,7 +17,7 @@ export function UserData(props) {
     ).charAt(0).toUpperCase()}`;
 
     return (
-        <div className="card w-full max-w-sm bg-base-100 shadow-lg">
+        <div className="card w-full max-w-sm bg-base-100 shadow-lg border border-[#E7F5A9]">
             <div className="card-body items-center text-center p-6">
                 <div className="avatar mb-4">
                     <div className="w-24 h-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 overflow-hidden bg-gradient-to-br from-[#2B98BA] to-[#4DBCDB] flex items-center justify-center">
