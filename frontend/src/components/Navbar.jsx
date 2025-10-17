@@ -152,17 +152,17 @@ export function Navbar() {
                 </div>
                 <ul
                   tabIndex={-1}
-                  className="menu menu-sm dropdown-content rounded-box z-[60] mt-3 w-52 p-2 shadow-lg border-2 border-[#EAF0D4] bg-[#FEFEF5]"
+                  className="menu menu-sm dropdown-content rounded-box z-[60] mt-3 w-52 p-2 shadow-lg border-2 border-[#EAF0D4] bg-[#FEFEF5] right-0"
                 >
                   <li>
-                    <label className="btn btn-ghost w-full justify-start cursor-pointer">
+                    <label className="btn btn-ghost w-full justify-start cursor-pointer p-0 h-auto min-h-0">
                       <input
                         type="file"
                         accept="image/*"
                         onChange={handleAvatarChange}
                         className="hidden"
                       />
-                      Update avatar
+                      <span className="px-4 py-3 w-full text-left">Update avatar</span>
                     </label>
                   </li>
                   <li>
