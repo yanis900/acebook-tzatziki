@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getPosts, createPost } from "../../services/posts";
+import { createPost, getFriendsPosts } from "../../services/posts";
 import Post from "../../components/Post";
 import { ToastContainer } from "react-toastify";
 import { PostForm } from "../../components/PostForm";
@@ -25,7 +25,7 @@ export function FeedPage() {
         .catch((err) => {
           console.error("Error fetching current user", err);
         });
-      getPosts(token)
+      getFriendsPosts(token)
         .then((data) => {
           console.log(data.posts)
           setPosts(data.posts);
@@ -44,7 +44,7 @@ export function FeedPage() {
         if (!token) return;
         const me = await getMe(token);
         setCurrentUser(me);
-        const data = await getPosts(token);
+        const data = await getFriendsPosts(token);
         setPosts(data.posts || []);
         if (data.token) localStorage.setItem("token", data.token);
       } catch (err) {
@@ -69,7 +69,7 @@ export function FeedPage() {
     try {
       e.preventDefault();
       const d = await createPost(token, message);
-      const data = await getPosts(token);
+      const data = await getFriendsPosts(token);
       setPosts(data.posts);
       notify(d.message, false);
       localStorage.setItem("token", data.token);
@@ -98,21 +98,28 @@ export function FeedPage() {
           message={message}
         />
         </div>
-
-        {posts.map((post) => (
-          <div className="m-4 w-120 mx-auto bg-gray-120" key={post._id}>
+        <div className="m-4 w-120 mx-auto bg-gray-120" >
+        {posts.length === 0 ? (<div 
+            role="alert" 
+            className="alert shadow-lg bg-[#4DBCDB] text-white border-none"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-current shrink-0 w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>Add friends to see posts.</span>
+          </div>) : posts.map((post) => (
             <Post
               post={post}
               currentUserId={currentUser?.id}
               key={post._id}
               onLikeChange={async () => {
-                const data = await getPosts(token);
+                const data = await getFriendsPosts(token);
                 setPosts(data.posts);
               }}
               allowOwnerActions={false}
             />
+          ))}
           </div>
-        ))}
       </div>
     </>
   );

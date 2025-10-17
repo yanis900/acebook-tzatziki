@@ -104,7 +104,7 @@ export function ListFriendsPage() {
 
         <div className="mt-8 text-center">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/posts')}
             className="btn text-white border-2 bg-[#4DBCDB] border-[#2B98BA] shadow-lg hover:bg-[#2B98BA] hover:border-[#2B98BA]"
           >
             Back to Feed
