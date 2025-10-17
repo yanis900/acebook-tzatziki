@@ -86,8 +86,8 @@ export function Navbar() {
                 href="/posts"
                 className="flex items-center gap-2 hover:opacity-90"
               >
-                <img src={logo} alt="Tzatziki" className="h-10 w-10 shrink-0" />
-                <span className="font-bold text-xl text-[#4DBCDB] whitespace-nowrap">
+                <img src={logo} alt="Tzatziki" className="h-13 w-13 drop-shadow-md shrink-0 mt-1" />
+                <span className="font-bold text-2xl drop-shadow-md tracking-tight text-[#4DBCDB] whitespace-nowrap">
                   Tzatziki
                 </span>
               </a>
@@ -135,9 +135,9 @@ export function Navbar() {
                 <div
                   tabIndex={0}
                   role="button"
-                  className="btn btn-circle avatar border-2 border-[#2B98BA] bg-[#4DBCDB] hover:opacity-90"
+                  className="avatar hover:opacity-90"
                 >
-                  <div className="w-9 h-9 rounded-full overflow-hidden">
+                  <div className="w-10 h-10 rounded-full overflow-hidden">
                     {currentUser?.image && (
                       <img
                         alt={currentUser?.firstname || "User"}
@@ -155,7 +155,7 @@ export function Navbar() {
                   className="menu menu-sm dropdown-content rounded-box z-[60] mt-3 w-52 p-2 shadow-lg border-2 border-[#EAF0D4] bg-[#FEFEF5]"
                 >
                   <li>
-                    <label className="btn btn-ghost w-full justify-start cursor-pointer">
+                    <label className="btn hover:bg-transparent hover:border-transparent btn-ghost w-48 justify-start cursor-pointer text-sm font-semibold">
                       <input
                         type="file"
                         accept="image/*"

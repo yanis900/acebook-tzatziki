@@ -28,10 +28,10 @@ export function PublicNavbar() {
             <img
               src={logo}
               alt="Tzatziki"
-              className="h-10 w-10 drop-shadow-md"
+              className="h-13 w-13 drop-shadow-md mt-2"
             />
           </div>
-          <span className="font-bold tracking-tight">Tzatziki</span>
+          <span className="font-bold text-2xl drop-shadow-md tracking-tight">Tzatziki</span>
         </a>
       </div>
     </div>
