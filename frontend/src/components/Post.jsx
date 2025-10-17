@@ -133,7 +133,7 @@ function Post({
       <div className="flex flex-col p-4 border border-[#E7F5A9] rounded-lg shadow bg-base-100">
         <div className="flex items-center gap-3">
           <div className="avatar">
-            <div className="w-8 rounded-full">
+            <div className="w-12 rounded-full">
               <img
                 src={safeImageSrc}
                 alt={`${post.user?.firstname}'s profile`}
@@ -141,10 +141,11 @@ function Post({
             </div>
           </div>
           <div className="text-left">
-            <h4 className="font-semibold text-sm m-0">
+            <a className="font-semibold text-base m-0" style={{color: "#2B98BA"}}
+              href={`/profile/${post.user?.firstname}-${post.user?.lastname}-${post.user?._id.slice(-6)}`} >
               {capitalise(post.user?.firstname)}{" "}
               {capitalise(post.user?.lastname)}
-            </h4>
+            </a>
             <p className="text-xs text-gray-500 m-0">
               {getTimeDifference(post?.date && new Date(post.date))}
             </p>
