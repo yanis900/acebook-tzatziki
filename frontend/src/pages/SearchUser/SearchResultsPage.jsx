@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { getMe, getUserByName } from "../../services/users";
 import { notify } from "../../utils/notify";
 import { Navbar } from "../../components/Navbar";
+import { capitalise } from "../../utils/capitalise";
 
 export function SearchResultsPage() {
   const [results, setResults] = useState([]);
@@ -69,6 +70,7 @@ export function SearchResultsPage() {
             radial-gradient(at 40% 70%, rgba(77, 188, 219, 0.2) 0px, transparent 50%),
             radial-gradient(at 90% 80%, rgba(231, 245, 169, 0.3) 0px, transparent 50%)
           `,
+          zIndex: -100
         }}
       />
       <Navbar currentUser={currentUser} />
@@ -87,7 +89,7 @@ export function SearchResultsPage() {
             <span>No users found matching your search query.</span>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-4 text-left">
             {results.map((user) => (
               <div 
                 key={user._id} 
@@ -109,9 +111,10 @@ export function SearchResultsPage() {
                 <div className="flex-1">
                   <a 
                     href={`/profile/${user.firstname}-${user.lastname}-${user._id.slice(-6)}`}
-                    className="text-l font-semibold link link-hover text-[#2B98BA] hover:text-[#4DBCDB]"
+                    className="text-xl font-semibold link link-hover text-[#2B98BA] hover:text-[#4DBCDB]"
+                    style={{color: "#2B98BA"}}
                   >
-                    {user.firstname} {user.lastname}  
+                    {capitalise(user.firstname)} {capitalise(user.lastname)}  
                   </a>
                 </div>
               </div>
@@ -121,7 +124,7 @@ export function SearchResultsPage() {
         
         <div className="mt-8 text-center">
           <button 
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/posts')}
             className="btn text-white border-2 bg-[#4DBCDB] border-[#2B98BA] shadow-lg hover:bg-[#2B98BA] hover:border-[#2B98BA]"
           >
             Back to Feed

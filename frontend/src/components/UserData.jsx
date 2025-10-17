@@ -17,10 +17,10 @@ export function UserData(props) {
     ).charAt(0).toUpperCase()}`;
 
     return (
-        <div className="card w-full max-w-sm bg-base-100 shadow-lg">
+        <div className="card w-full max-w-xl bg-base-100 shadow-lg border border-[#E7F5A9]">
             <div className="card-body items-center text-center p-6">
                 <div className="avatar mb-4">
-                    <div className="w-24 h-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 overflow-hidden bg-gradient-to-br from-[#2B98BA] to-[#4DBCDB] flex items-center justify-center">
+                    <div className="w-30 h-30 rounded-full overflow-hidden flex items-center justify-center">
                         {imageSrc ? (
                             <img src={imageSrc} alt={`${user.firstname} ${user.lastname}`} className="object-cover w-full h-full" />
                         ) : (
@@ -29,11 +29,11 @@ export function UserData(props) {
                     </div>
                 </div>
 
-                <h2 className="text-lg md:text-xl font-bold">
+                <h2 className="text-lg md:text-xl font-bold m-0 text-[#2B98BA]">
                     {capitalise(user.firstname || "")} {capitalise(user.lastname || "")}
                 </h2>
 
-                <p className="text-sm text-gray-500 break-words">{user.email}</p>
+                <p className="text-sm text-gray-500 break-words m-0">{user.email}</p>
 
                 {user.bio && (
                     <p className="mt-3 text-sm text-gray-700">{user.bio}</p>
