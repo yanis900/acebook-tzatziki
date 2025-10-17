@@ -155,7 +155,7 @@ export function Navbar() {
                   className="menu menu-sm dropdown-content rounded-box z-[60] mt-3 w-52 p-2 shadow-lg border-2 border-[#EAF0D4] bg-[#FEFEF5]"
                 >
                   <li>
-                    <label className="btn btn-ghost w-full justify-start cursor-pointer">
+                    <label className="btn hover:bg-transparent hover:border-transparent btn-ghost w-48 justify-start cursor-pointer text-sm font-semibold">
                       <input
                         type="file"
                         accept="image/*"

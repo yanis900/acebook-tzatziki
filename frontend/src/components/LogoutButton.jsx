@@ -8,7 +8,7 @@ function LogoutButton() {
     navigate("/");
   }
 
-  return <button onClick={logOut} className="btn btn-ghost w-full justify-start">Log out</button>;
+  return <button onClick={logOut} className="btn btn-ghost w-full justify-start text-sm font-semibold hover:bg-transparent hover:border-transparent">Log out</button>;
 }
 
 export default LogoutButton;
