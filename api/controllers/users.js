@@ -109,11 +109,17 @@ async function getFriends(req, res) {
 async function friendUser(req, res) {
   const myId = req.body.myId;
   const otherId = req.body.otherId;
-  const user = User.updateOne({ _id: myId }, { $set: { friends: otherId } });
-  const otherUser = User.updateOne(
-    { _id: otherId },
-    { $push: { friends: myId } }
-  );
+  if (!myId || !otherId) {
+    return res.status(400).json({ message: "Missing user ids" });
+  }
+
+  if (String(myId) === String(otherId)) {
+    return res.status(400).json({ message: "Cannot friend yourself" });
+  }
+
+  // Use $addToSet to append without duplicating and avoid replacing the array
+  const user = User.updateOne({ _id: myId }, { $addToSet: { friends: otherId } });
+  const otherUser = User.updateOne({ _id: otherId }, { $addToSet: { friends: myId } });
 
   Promise.all([user, otherUser])
     .then(([userResult, otherUserResult]) => {

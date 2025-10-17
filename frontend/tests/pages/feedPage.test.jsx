@@ -2,16 +2,16 @@ import { render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 
 import { FeedPage } from "../../src/pages/Feed/FeedPage";
-import { getPosts, createPost } from "../../src/services/posts";
+import { createPost, getFriendsPosts } from "../../src/services/posts";
 import { useNavigate } from "react-router-dom";
 
 import userEvent from "@testing-library/user-event";
 
 // Mocking the getPosts service
 vi.mock("../../src/services/posts", () => {
-  const getPostsMock = vi.fn();
+  const getFriendsPostsMock = vi.fn();
   const createPostMock = vi.fn();
-  return { getPosts: getPostsMock, createPost: createPostMock };
+  return { getFriendsPosts: getFriendsPostsMock, createPost: createPostMock };
 });
 
 // Mocking React Router's useNavigate function
@@ -31,7 +31,7 @@ describe("Feed Page", () => {
 
     const mockPosts = [{ _id: "12345", message: "Test Post 1", date: "2025-10-10T11:37:04.662Z"}];
 
-    getPosts.mockResolvedValue({ posts: mockPosts, token: "newToken" });
+    getFriendsPosts.mockResolvedValue({ posts: mockPosts, token: "newToken" });
 
     render(<FeedPage />);
 
@@ -48,9 +48,9 @@ describe("Feed Page", () => {
   test.skip("createPost creates post and appears on feed", async () => {
   window.localStorage.setItem("token", "testToken");
 
-  getPosts.mockResolvedValueOnce({ posts: [], token: "newToken" });
+  getFriendsPosts.mockResolvedValueOnce({ posts: [], token: "newToken" });
 
-  getPosts.mockResolvedValueOnce({ posts: [{ _id: "1", message: "Hello World", date: "2025-10-10T11:37:04.662Z" }], token: "newToken" });
+  getFriendsPosts.mockResolvedValueOnce({ posts: [{ _id: "1", message: "Hello World", date: "2025-10-10T11:37:04.662Z" }], token: "newToken" });
 
   createPost.mockResolvedValueOnce({ _id: "1", message: "Hello World", date: "2025-10-10T11:37:04.662Z" });
 

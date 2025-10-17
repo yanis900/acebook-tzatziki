@@ -1,5 +1,6 @@
 const Post = require("../models/post");
 const { generateToken } = require("../lib/token");
+const User = require("../models/user");
 
 async function getAllPosts(req, res) {
   const posts = await Post.find()
@@ -9,6 +10,39 @@ async function getAllPosts(req, res) {
   console.log(posts);
   const token = generateToken(req.user_id);
   res.status(200).json({ posts: posts, token: token });
+}
+
+async function getFriendsPosts(req, res) {
+  const myId = req.user_id;
+  if (!myId) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
+
+
+  try {
+    const user = await User.findById(myId).select("friends");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const friendsIds = (user.friends || []).map((id) => id.toString());
+    if (friendsIds.length === 0) {
+      const tokenEmpty = generateToken(myId);
+      return res.status(200).json({ posts: [], token: tokenEmpty });
+    }
+
+    const posts = await Post.find({ user: { $in: friendsIds } })
+      .populate("user", "_id image firstname lastname")
+      .populate("likesBy", "firstname lastname")
+      .sort({ date: -1 })
+      .exec();
+
+    const token = generateToken(myId);
+    res.status(200).json({ posts: posts, token: token });
+  } catch (err) {
+    console.error("Error in getFriendPosts:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
 }
 
 async function getUserPosts(req, res) {
@@ -135,6 +169,7 @@ const PostsController = {
   unlikePost: unlikePost,
   editPost: editPost,
   getFriendPosts: getFriendPosts,
+  getFriendsPosts: getFriendsPosts,
 };
 
 module.exports = PostsController;
