@@ -57,12 +57,24 @@ export function SearchResultsPage() {
 
     <div className="fixed inset-0"
           style={{
-            background: 'linear-gradient(180deg, #FEFEF5 0%, rgba(77, 188, 219, 0.05) 100%)',
+            background: 'linear-gradient(180deg, #FEFEF5 0%, rgba(77, 188, 219, 0.08) 50%, #FEFEF5 100%)',
           }} >
+      {/* Modern mesh gradient overlay */}
+      <div
+        className="absolute inset-0 opacity-30"
+        style={{
+          backgroundImage: `
+            radial-gradient(at 20% 30%, rgba(77, 188, 219, 0.3) 0px, transparent 50%),
+            radial-gradient(at 80% 20%, rgba(231, 245, 169, 0.4) 0px, transparent 50%),
+            radial-gradient(at 40% 70%, rgba(77, 188, 219, 0.2) 0px, transparent 50%),
+            radial-gradient(at 90% 80%, rgba(231, 245, 169, 0.3) 0px, transparent 50%)
+          `,
+        }}
+      />
       <Navbar currentUser={currentUser} />
       
       <div className="container mx-auto p-4 md:p-8 max-w-lg">
-        <h2 className="text-2xl font-bold"> Search Results for &quot;{query}&quot; </h2>
+        <h2 className="text-3xl font-semibold mb-2" style={{ color: '#4DBCDB' }}>Search Results for &quot;{query}&quot;</h2>
 
         {results.length === 0 ? (
           <div 
