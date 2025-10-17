@@ -141,21 +141,21 @@ function Post({
             </div>
           </div>
           <div className="text-left">
-            <h4 className="font-semibold text-sm">
+            <h4 className="font-semibold text-sm m-0">
               {capitalise(post.user?.firstname)}{" "}
               {capitalise(post.user?.lastname)}
             </h4>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 m-0">
               {getTimeDifference(post?.date && new Date(post.date))}
             </p>
           </div>
         </div>
 
-        <p className="text-left py-3 text-sm max-h-40 overflow-auto break-words border-b border-gray-200">
+        <p className="text-left pt-3 pb-4 text-sm max-h-40 overflow-auto break-words border-b border-gray-200">
           {post.message}
         </p>
 
-        <div className="flex justify-between items-center pt-3">
+        <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
             <LikeButton
               isLiked={isLiked}
