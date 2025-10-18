@@ -7,7 +7,7 @@ async function getAllPosts(req, res) {
     .populate("user", "_id image firstname lastname").populate('likesBy', 'firstname lastname')
     .sort({ date: -1 })
     .exec();
-  console.log(posts);
+  // console.log(posts);
   const token = generateToken(req.user_id);
   res.status(200).json({ posts: posts, token: token });
 }
@@ -133,9 +133,9 @@ async function unlikePost(req, res) {
 
 async function editPost(req, res) {
   const postId = req.params.id;
-  console.log(postId);
+  // console.log(postId);
   const post = await Post.findById(postId);
-  console.log(post)
+  // console.log(post)
 
   if (!post) {
     return res.status(404).json({ message: "Post not found" });
@@ -152,7 +152,7 @@ async function editPost(req, res) {
     { message: req.body.message }, // matches schema
     { new: true }
   );
-  console.log(updatedPost);
+  // console.log(updatedPost);
   // generate new token
   const newToken = generateToken(req.user_id);
 

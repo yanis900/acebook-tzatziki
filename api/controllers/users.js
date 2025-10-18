@@ -55,7 +55,7 @@ async function create(req, res) {
 async function updateImage(req, res) {
   try {
     const myId = req.body.myId;
-    console.log(myId);
+    // console.log(myId);
     
     if (!req.file) {
       return res.status(400).json({ message: "No file uploaded" });

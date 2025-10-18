@@ -118,7 +118,7 @@ export async function unFriendUser(token, myId, otherId) {
   }
 
   const data = await response.json();
-  console.log(data);
+  // console.log(data);
   return data;
 }
 
@@ -155,13 +155,13 @@ export async function updateImage(token, myId, file) {
     },
     body: formData,
   });
-  console.log("TOKEN", token);
+  // console.log("TOKEN", token);
 
   if (!response.ok) {
     throw new Error("Unable to update user image");
   }
 
   const data = await response.json();
-  console.log(data);
+  // console.log(data);
   return data;
 }

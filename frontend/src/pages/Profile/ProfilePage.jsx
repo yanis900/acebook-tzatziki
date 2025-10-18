@@ -30,7 +30,7 @@ export function ProfilePage() {
     if (loggedIn) {
       getMe(token)
         .then((data) => {
-          console.log(data);
+          // console.log(data);
           setCurrentUser(data);
         })
         .catch((err) => {
@@ -38,7 +38,7 @@ export function ProfilePage() {
         });
       getUserPosts(token)
         .then((data) => {
-          console.log("data", data);
+          // console.log("data", data);
           setPosts(data.posts);
           localStorage.setItem("token", data.token);
         })

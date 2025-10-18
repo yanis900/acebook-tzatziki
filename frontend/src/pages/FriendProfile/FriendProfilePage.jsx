@@ -61,7 +61,7 @@ export function FriendProfilePage() {
         .catch((err) => {
           console.error(err);
         });
-      console.log(me.friends);
+      // console.log(me.friends);
     }
   }, [me, userData, navigate]);
 

@@ -27,7 +27,7 @@ export function FeedPage() {
         });
       getFriendsPosts(token)
         .then((data) => {
-          console.log(data.posts)
+          // console.log(data.posts)
           setPosts(data.posts);
           localStorage.setItem("token", data.token);
         })

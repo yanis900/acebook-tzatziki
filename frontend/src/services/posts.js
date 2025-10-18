@@ -90,7 +90,7 @@ export async function createPost(token, message) {
   }
 
   const data = await response.json();
-  console.log(data);
+  // console.log(data);
   return data;
 }
 
@@ -111,7 +111,7 @@ export async function deletePost(token, postId) {
   }
 
   const data = await response.json();
-  console.log(data);
+  // console.log(data);
   return data;
 }
 
@@ -131,7 +131,7 @@ export async function likePost(token, postId) {
   }
 
   const data = await response.json();
-  console.log(data);
+  // console.log(data);
   return data;
 }
 
@@ -151,7 +151,7 @@ export async function unlikePost(token, postId) {
   }
 
   const data = await response.json();
-  console.log(data);
+  // console.log(data);
   return data;
 }
 
@@ -171,6 +171,6 @@ export async function editPost(token, postId, message) {
   }
 
   const data = await response.json();
-  console.log(data);
+  // console.log(data);
   return data;
 }
