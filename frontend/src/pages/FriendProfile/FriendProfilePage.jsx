@@ -11,6 +11,7 @@ import Post from "../../components/Post";
 import { getFriendPosts } from "../../services/posts";
 import { UserData } from "../../components/UserData";
 import { Navbar } from "../../components/Navbar";
+import { Loading } from "../../components/Loading";
 
 export function FriendProfilePage() {
   const { userSlug } = useParams();
@@ -92,14 +93,18 @@ export function FriendProfilePage() {
     }
   };
 
-  if (!userData) return <p>Loading...</p>;
+  if (!userData) {
+    return <Loading />;
+  }
 
   return (
     <>
-      <div className="fixed inset-0 z-[-1]"
-          style={{
-            background: 'linear-gradient(180deg, #FEFEF5 0%, rgba(77, 188, 219, 0.08) 50%, #FEFEF5 100%)',
-          }}
+      <div
+        className="fixed inset-0 z-[-1]"
+        style={{
+          background:
+            "linear-gradient(180deg, #FEFEF5 0%, rgba(77, 188, 219, 0.08) 50%, #FEFEF5 100%)",
+        }}
       >
         {/* Modern mesh gradient overlay */}
         <div
@@ -114,34 +119,43 @@ export function FriendProfilePage() {
           }}
         />
       </div>
-    <div className="relative min-h-screen flex flex-col items-center">
-      <Navbar/>
-      <main className="container max-w-4xl px-4 w-full">
-      <div className="flex flex-col items-center text-center py-4">
-        <h2 className="text-3xl font-semibold mb-2" style={{ color: '#4DBCDB' }}>{userData.firstname ? userData.firstname.charAt(0).toUpperCase() + userData.firstname.slice(1) : ''}&apos;s Feed</h2>
-        {userData && <UserData userData={userData} />}
-        <FriendButton 
-          isFriend={isFriend}
-          handleAddFriend={handleAddFriend}
-          handleRemoveFriend={handleRemoveFriend}
-        />
+      <div className="relative min-h-screen flex flex-col items-center">
+        <Navbar />
+        <main className="container max-w-4xl px-4 w-full">
+          <div className="flex flex-col items-center text-center py-4">
+            <h2
+              className="text-3xl font-semibold mb-2"
+              style={{ color: "#4DBCDB" }}
+            >
+              {userData.firstname
+                ? userData.firstname.charAt(0).toUpperCase() +
+                  userData.firstname.slice(1)
+                : ""}
+              &apos;s Feed
+            </h2>
+            {userData && <UserData userData={userData} />}
+            <FriendButton
+              isFriend={isFriend}
+              handleAddFriend={handleAddFriend}
+              handleRemoveFriend={handleRemoveFriend}
+            />
+          </div>
+          {isFriend
+            ? posts.map((post) => (
+                <div className="m-4 w-120 mx-auto" key={post._id}>
+                  <Post
+                    post={post}
+                    currentUserId={me?.id}
+                    onLikeChange={async () => {
+                      const data = await getFriendPosts(token, userData._id);
+                      setPosts(data.posts);
+                    }}
+                  />
+                </div>
+              ))
+            : ""}
+        </main>
       </div>
-      {isFriend
-        ? posts.map((post) => (
-            <div className="m-4 w-120 mx-auto" key={post._id} >
-              <Post
-                post={post}
-                currentUserId={me?.id}
-                onLikeChange={async () => {
-                  const data = await getFriendPosts(token, userData._id);
-                  setPosts(data.posts);
-                }}
-              />
-            </div>
-          ))
-        : ""}
-      </main>
-    </div>
     </>
   );
 }

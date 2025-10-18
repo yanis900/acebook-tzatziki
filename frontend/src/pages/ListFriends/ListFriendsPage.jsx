@@ -4,6 +4,7 @@ import { notify } from "../../utils/notify";
 import { getFriends, getMe } from "../../services/users";
 import { Navbar } from "../../components/Navbar";
 import { capitalise } from "../../utils/capitalise";
+import { Loading } from "../../components/Loading";
 
 export function ListFriendsPage() {
   const [results, setResults] = useState([]);
@@ -36,12 +37,7 @@ export function ListFriendsPage() {
   }, [navigate]);
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <span className="loading loading-spinner loading-lg text-[#4DBCDB]"></span>
-        <p className="ml-2">Loading...</p>
-      </div>
-    );
+    return <Loading />
   }
 
   return (
